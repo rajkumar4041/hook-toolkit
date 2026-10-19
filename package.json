@@ -1,6 +1,6 @@
 {
   "name": "hook-toolkit",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Production-ready React hooks that eliminate entire repetitive workflows — autosave, async actions, debounced search, persistent state, and unsaved-changes guards — not just another grab-bag of primitives.",
   "type": "module",
   "sideEffects": false,
@@ -55,7 +55,7 @@
   "bugs": {
     "url": "https://github.com/rajkumar4041/react-hooks/issues"
   },
-  "homepage": "https://github.com/rajkumar4041/react-hooks#readme",
+  "homepage": "https://hook-toolkit-document-8azd.vercel.app/",
   "engines": {
     "node": ">=18"
   },

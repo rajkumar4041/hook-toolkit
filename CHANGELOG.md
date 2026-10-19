@@ -6,10 +6,17 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-19
+
 ### Added
 
 - `useDisclosure<T>` — open/close state for modals/drawers/dialogs with an optional typed data payload and stable controls (`opened`, `data`, `open`, `close`, `toggle`).
 - `useWebSocket<T>` — WebSocket connection manager with `isConnected`/`error` state, typed `onMessageReceived` (no stale closures), `sendData`, `reconnect`, `closeConnection`, SSR-safe, auto-cleanup.
+- Documentation site: <https://hook-toolkit-document-8azd.vercel.app/>.
+
+### Changed
+
+- `package.json` `homepage` now points to the documentation site.
 
 ## [0.1.0] - 2026-10-19
 
@@ -40,5 +47,6 @@ Initial pre-release. 20 hooks, zero runtime dependencies, React 18+.
 - ESLint (rules-of-hooks, no `any`) + Prettier.
 - GitHub Actions CI on Node 18/20/22; release workflow with npm provenance.
 
-[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/rajkumar4041/react-hooks/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rajkumar4041/react-hooks/releases/tag/v0.1.0

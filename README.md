@@ -7,8 +7,11 @@
 [![types](https://img.shields.io/npm/types/hook-toolkit.svg)](https://www.npmjs.com/package/hook-toolkit)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/hook-toolkit.svg)](https://bundlephobia.com/package/hook-toolkit)
+[![docs](https://img.shields.io/badge/docs-website-brightgreen.svg)](https://hook-toolkit-document-8azd.vercel.app/)
 
-> **Status:** pre-release (`0.1.0`). Badges that depend on the npm registry activate once the package is published.
+📖 **Documentation site:** [hook-toolkit-document-8azd.vercel.app](https://hook-toolkit-document-8azd.vercel.app/)
+
+> **Current version:** `0.2.0` — 22 hooks.
 
 `hook-toolkit` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
 
@@ -52,6 +55,8 @@ npm install hook-toolkit
 ```
 
 **Requirements:** React **18+** (uses `useSyncExternalStore`), Node **18+** for development. Works in all evergreen browsers.
+
+Full interactive docs are at **[hook-toolkit-document-8azd.vercel.app](https://hook-toolkit-document-8azd.vercel.app/)**.
 
 ---
 
