@@ -183,7 +183,11 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 
 ### 🌐 Browser / DOM
 
-`useMediaQuery` · `useWindowSize` · `useClickOutside` · `useDocumentTitle` · `useClipboard` · `useNetworkStatus`
+`useMediaQuery` · `useWindowSize` · `useClickOutside` · `useDocumentTitle` · `useClipboard` · `useNetworkStatus` · `useWebSocket`
+
+### 🧩 UI state
+
+`useDisclosure` (modal/drawer/dialog state with a typed data payload)
 
 Per-hook deep-dive pages live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
@@ -405,6 +409,26 @@ const { copy, copied } = useClipboard();
 
 // useNetworkStatus(): { online }
 const { online } = useNetworkStatus();
+
+// useWebSocket<T>({ url, onMessageReceived?, disableInitialConnection? })
+//   -> { isConnected, error, sendData, reconnect, closeConnection }
+const { isConnected, sendData } = useWebSocket<ChatMessage>({
+  url: 'wss://example.com/chat',
+  onMessageReceived: (e) => appendMessage(e.data),
+});
+sendData(JSON.stringify(msg)); // returns false (dropped) until isConnected
+```
+
+### UI state
+
+```tsx
+// useDisclosure<T>(initialOpen?, { onOpen?, onClose? })
+//   -> { opened, data, open, close, toggle }
+const dialog = useDisclosure<User>();
+<button onClick={() => dialog.open(user)}>Edit</button>;
+<Modal open={dialog.opened} onClose={dialog.close}>
+  {dialog.data && <EditForm user={dialog.data} />}
+</Modal>;
 ```
 
 Full reference → [docs/reference.md](./docs/reference.md).

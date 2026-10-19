@@ -52,3 +52,13 @@ export type { UseClipboardOptions, UseClipboardResult } from './hooks/useClipboa
 
 export { useNetworkStatus } from './hooks/useNetworkStatus';
 export type { NetworkStatus } from './hooks/useNetworkStatus';
+
+export { useDisclosure } from './hooks/useDisclosure';
+export type { UseDisclosure, UseDisclosureOptions } from './hooks/useDisclosure';
+
+export { useWebSocket } from './hooks/useWebSocket';
+export type {
+  UseWebSocketProps,
+  UseWebSocketReturn,
+  WebSocketSendable,
+} from './hooks/useWebSocket';

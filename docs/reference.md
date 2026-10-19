@@ -149,3 +149,28 @@ Track online/offline status. Assumes `online: true` on the server; reflects `nav
 ```tsx
 const { online } = useNetworkStatus();
 ```
+
+### `useWebSocket<T>({ url, onMessageReceived?, disableInitialConnection? }): { isConnected, error, sendData, reconnect, closeConnection }`
+
+Manage a WebSocket connection with connection state, error handling, typed messages, and automatic cleanup. `onMessageReceived` is always the latest callback (no stale closures). `sendData` returns `false` if the socket isn't open (frames are dropped, not queued). Reconnects when `url` changes; closes on unmount. SSR-safe (the socket is created in an effect). Does not auto-reconnect on drop — call `reconnect` yourself.
+
+```tsx
+const { isConnected, sendData, reconnect } = useWebSocket<ChatMessage>({
+  url: 'wss://example.com/chat',
+  onMessageReceived: (e) => appendMessage(e.data),
+});
+```
+
+---
+
+## UI state
+
+### `useDisclosure<T>(initialOpen = false, { onOpen?, onClose? }): { opened, data, open, close, toggle }`
+
+Open/close state for modals, drawers, dialogs, and popovers, with an optional **typed data payload** (the record you opened it for). All controls are referentially stable. The payload is stored by reference (no deep clone) — clone before passing if you need isolation.
+
+```tsx
+const dialog = useDisclosure<User>();
+dialog.open(user); // dialog.opened === true, dialog.data === user
+dialog.close(); // dialog.opened === false, dialog.data === undefined
+```

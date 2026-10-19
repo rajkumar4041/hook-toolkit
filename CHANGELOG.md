@@ -6,6 +6,11 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `useDisclosure<T>` — open/close state for modals/drawers/dialogs with an optional typed data payload and stable controls (`opened`, `data`, `open`, `close`, `toggle`).
+- `useWebSocket<T>` — WebSocket connection manager with `isConnected`/`error` state, typed `onMessageReceived` (no stale closures), `sendData`, `reconnect`, `closeConnection`, SSR-safe, auto-cleanup.
+
 ## [0.1.0] - 2026-10-19
 
 Initial pre-release. 20 hooks, zero runtime dependencies, React 18+.
