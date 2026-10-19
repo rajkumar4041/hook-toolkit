@@ -135,9 +135,7 @@ export function usePersistentState<T>(
     (update) => {
       const store = getStorage(optsRef.current.storageKind);
       const next =
-        typeof update === 'function'
-          ? (update as (prev: T) => T)(valueRef.current)
-          : update;
+        typeof update === 'function' ? (update as (prev: T) => T)(valueRef.current) : update;
       if (store) {
         try {
           store.setItem(key, optsRef.current.serialize(next));

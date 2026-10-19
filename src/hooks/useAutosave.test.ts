@@ -32,10 +32,9 @@ describe('useAutosave', () => {
 
   it('debounces rapid changes into a single save', async () => {
     const onSave = vi.fn(async () => {});
-    const { rerender } = renderHook(
-      ({ data }) => useAutosave(data, onSave, { delay: 500 }),
-      { initialProps: { data: { text: 'a' } } },
-    );
+    const { rerender } = renderHook(({ data }) => useAutosave(data, onSave, { delay: 500 }), {
+      initialProps: { data: { text: 'a' } },
+    });
     rerender({ data: { text: 'ab' } });
     act(() => vi.advanceTimersByTime(300));
     rerender({ data: { text: 'abc' } });

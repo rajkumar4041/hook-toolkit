@@ -37,9 +37,7 @@ describe('useDebouncedAsync', () => {
 
   it('skips fetching when enabled() returns false', () => {
     const fetcher = vi.fn(async () => 'r');
-    renderHook(() =>
-      useDebouncedAsync('', fetcher, { delay: 100, enabled: (q) => q.length > 0 }),
-    );
+    renderHook(() => useDebouncedAsync('', fetcher, { delay: 100, enabled: (q) => q.length > 0 }));
     act(() => vi.advanceTimersByTime(100));
     expect(fetcher).not.toHaveBeenCalled();
   });

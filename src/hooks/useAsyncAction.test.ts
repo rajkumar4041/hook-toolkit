@@ -69,9 +69,7 @@ describe('useAsyncAction', () => {
       signals.push(signal);
       return deferred<number>().promise;
     };
-    const { result } = renderHook(() =>
-      useAsyncAction(makeFn(), { allowConcurrent: true }),
-    );
+    const { result } = renderHook(() => useAsyncAction(makeFn(), { allowConcurrent: true }));
     act(() => void result.current.run());
     act(() => void result.current.run());
     expect(signals).toHaveLength(2);

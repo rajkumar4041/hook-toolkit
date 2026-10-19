@@ -33,10 +33,7 @@ export function useToggle(initial = false): [boolean, UseToggleControls] {
   const setOff = useCallback(() => setValue(false), []);
   const set = useCallback((next: boolean) => setValue(next), []);
 
-  const controls = useMemo(
-    () => ({ toggle, setOn, setOff, set }),
-    [toggle, setOn, setOff, set],
-  );
+  const controls = useMemo(() => ({ toggle, setOn, setOff, set }), [toggle, setOn, setOff, set]);
 
   return [value, controls];
 }

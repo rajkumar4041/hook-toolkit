@@ -15,10 +15,7 @@ export type { UseCounterOptions, UseCounterControls } from './hooks/useCounter';
 
 // Flagship workflow hooks
 export { usePersistentState } from './hooks/usePersistentState';
-export type {
-  PersistentStateOptions,
-  SetPersistentState,
-} from './hooks/usePersistentState';
+export type { PersistentStateOptions, SetPersistentState } from './hooks/usePersistentState';
 
 export { useAsyncAction } from './hooks/useAsyncAction';
 export type {
@@ -29,19 +26,13 @@ export type {
 } from './hooks/useAsyncAction';
 
 export { useDebouncedAsync } from './hooks/useDebouncedAsync';
-export type {
-  UseDebouncedAsyncOptions,
-  UseDebouncedAsyncResult,
-} from './hooks/useDebouncedAsync';
+export type { UseDebouncedAsyncOptions, UseDebouncedAsyncResult } from './hooks/useDebouncedAsync';
 
 export { useAutosave } from './hooks/useAutosave';
 export type { SaveStatus, UseAutosaveOptions, UseAutosaveResult } from './hooks/useAutosave';
 
 export { useUnsavedChanges } from './hooks/useUnsavedChanges';
-export type {
-  UseUnsavedChangesOptions,
-  UseUnsavedChangesResult,
-} from './hooks/useUnsavedChanges';
+export type { UseUnsavedChangesOptions, UseUnsavedChangesResult } from './hooks/useUnsavedChanges';
 
 // Browser / DOM hooks
 export { useMediaQuery } from './hooks/useMediaQuery';

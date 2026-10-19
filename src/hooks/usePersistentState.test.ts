@@ -61,9 +61,7 @@ describe('usePersistentState', () => {
   });
 
   it('supports sessionStorage', () => {
-    const { result } = renderHook(() =>
-      usePersistentState('s', 1, { storage: 'session' }),
-    );
+    const { result } = renderHook(() => usePersistentState('s', 1, { storage: 'session' }));
     act(() => result.current[1](9));
     expect(sessionStorage.getItem('s')).toBe('9');
     expect(localStorage.getItem('s')).toBeNull();
@@ -72,17 +70,13 @@ describe('usePersistentState', () => {
   it('falls back to initial value and reports error on corrupt JSON', () => {
     localStorage.setItem('k', '{not valid json');
     const onError = vi.fn();
-    const { result } = renderHook(() =>
-      usePersistentState('k', 'safe', { onError }),
-    );
+    const { result } = renderHook(() => usePersistentState('k', 'safe', { onError }));
     expect(result.current[0]).toBe('safe');
     expect(onError).toHaveBeenCalled();
   });
 
   it('works with object values', () => {
-    const { result } = renderHook(() =>
-      usePersistentState('obj', { count: 0 }),
-    );
+    const { result } = renderHook(() => usePersistentState('obj', { count: 0 }));
     act(() => result.current[1]({ count: 2 }));
     expect(result.current[0]).toEqual({ count: 2 });
     expect(JSON.parse(localStorage.getItem('obj')!)).toEqual({ count: 2 });

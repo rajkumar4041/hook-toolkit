@@ -8,10 +8,7 @@ module.exports = {
     ecmaFeatures: { jsx: true },
   },
   plugins: ['@typescript-eslint', 'react-hooks'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   rules: {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',

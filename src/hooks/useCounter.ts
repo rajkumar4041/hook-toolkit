@@ -39,10 +39,7 @@ export function useCounter(
 
   const [count, setCount] = useState(() => clamp(initial, min, max));
 
-  const set = useCallback(
-    (value: number) => setCount(clamp(value, min, max)),
-    [min, max],
-  );
+  const set = useCallback((value: number) => setCount(clamp(value, min, max)), [min, max]);
   const increment = useCallback(
     (by: number = step) => setCount((c) => clamp(c + by, min, max)),
     [min, max, step],

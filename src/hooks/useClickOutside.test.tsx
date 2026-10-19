@@ -3,13 +3,7 @@ import { render, act } from '@testing-library/react';
 import { useRef } from 'react';
 import { useClickOutside } from './useClickOutside';
 
-function Harness({
-  onOutside,
-  enabled,
-}: {
-  onOutside: () => void;
-  enabled?: boolean;
-}) {
+function Harness({ onOutside, enabled }: { onOutside: () => void; enabled?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, onOutside, enabled === undefined ? undefined : { enabled });
   return (

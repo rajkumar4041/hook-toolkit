@@ -149,7 +149,9 @@ export function useAsyncAction<T, A extends unknown[] = []>(
     controllerRef.current = null;
     inFlightRef.current = null;
     // Leave any prior data; just stop the loading state.
-    setState((s) => (s.status === 'loading' ? { ...s, status: s.data !== null ? 'success' : 'idle' } : s));
+    setState((s) =>
+      s.status === 'loading' ? { ...s, status: s.data !== null ? 'success' : 'idle' } : s,
+    );
   }, []);
 
   const reset = useCallback(() => {
