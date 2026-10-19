@@ -1,14 +1,14 @@
-# Contributing to hookflow
+# Contributing to react-hookflow
 
-Thanks for your interest in improving hookflow! This project values **quality over quantity** — a small set of hooks that are correct, well-typed, well-tested, and well-documented.
+Thanks for your interest in improving react-hookflow! This project values **quality over quantity** — a small set of hooks that are correct, well-typed, well-tested, and well-documented.
 
-## Philosophy: what belongs in hookflow
+## Philosophy: what belongs in react-hookflow
 
 Before proposing a new hook, ask:
 
 1. **Does it eliminate a real, recurring workflow** — or is it a thin wrapper over one `useState`/`useEffect`? We prefer the former.
 2. **Is it meaningfully better than an existing, well-established library?** If TanStack Query / react-hook-form already solve it excellently, we document that instead of competing.
-3. **Can it be implemented with zero runtime dependencies?** hookflow ships no runtime deps.
+3. **Can it be implemented with zero runtime dependencies?** react-hookflow ships no runtime deps.
 
 We would rather reject a mediocre hook than inflate the hook count.
 
@@ -65,6 +65,6 @@ Run `npm run check` before opening a PR; CI runs the same on Node 18, 20, and 22
 
 ## Versioning
 
-hookflow follows [Semantic Versioning](https://semver.org/). See [RELEASE.md](./RELEASE.md) for the deprecation and release policy.
+react-hookflow follows [Semantic Versioning](https://semver.org/). See [RELEASE.md](./RELEASE.md) for the deprecation and release policy.
 
 By contributing you agree your contributions are licensed under the [MIT License](./LICENSE).

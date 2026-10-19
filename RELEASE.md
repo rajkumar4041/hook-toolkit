@@ -2,7 +2,7 @@
 
 ## Semantic Versioning
 
-hookflow follows [SemVer](https://semver.org/):
+react-hookflow follows [SemVer](https://semver.org/):
 
 - **MAJOR** — breaking changes to a hook's public API (removed hook, changed parameter order, changed return shape, narrowed types that break consumers).
 - **MINOR** — new hooks, new optional options, additive type widening — all backward compatible.

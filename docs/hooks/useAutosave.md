@@ -7,7 +7,7 @@ Autosave looks simple and never is: debounce the save, show accurate `saving / s
 ## Import
 
 ```ts
-import { useAutosave } from 'hookflow';
+import { useAutosave } from 'react-hookflow';
 ```
 
 ## Minimal example

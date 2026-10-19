@@ -7,7 +7,7 @@ When a form has unsaved edits, you want to warn the user before they lose them â
 ## Import
 
 ```ts
-import { useUnsavedChanges } from 'hookflow';
+import { useUnsavedChanges } from 'react-hookflow';
 ```
 
 ## Minimal example

@@ -7,7 +7,7 @@ Persisting a piece of state to the browser normally means: read from storage, tr
 ## Import
 
 ```ts
-import { usePersistentState } from 'hookflow';
+import { usePersistentState } from 'react-hookflow';
 ```
 
 ## Minimal example

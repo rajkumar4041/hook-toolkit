@@ -1,16 +1,16 @@
-# hookflow
+# react-hookflow
 
 > Production-ready React hooks that eliminate entire repetitive **workflows** — not just another grab-bag of primitives.
 
 [![CI](https://github.com/rajkumar4041/react-hooks/actions/workflows/ci.yml/badge.svg)](https://github.com/rajkumar4041/react-hooks/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/hookflow.svg)](https://www.npmjs.com/package/hookflow)
-[![types](https://img.shields.io/npm/types/hookflow.svg)](https://www.npmjs.com/package/hookflow)
+[![npm version](https://img.shields.io/npm/v/react-hookflow.svg)](https://www.npmjs.com/package/react-hookflow)
+[![types](https://img.shields.io/npm/types/react-hookflow.svg)](https://www.npmjs.com/package/react-hookflow)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![minzipped size](https://img.shields.io/bundlephobia/minzip/hookflow.svg)](https://bundlephobia.com/package/hookflow)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/react-hookflow.svg)](https://bundlephobia.com/package/react-hookflow)
 
 > **Status:** pre-release (`0.1.0`). Badges that depend on the npm registry activate once the package is published.
 
-`hookflow` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
+`react-hookflow` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
 
 - **Zero runtime dependencies.** React is the only peer dependency.
 - **TypeScript-first.** Full generics and inference; no `any` in the codebase.
@@ -23,17 +23,17 @@
 ## Installation
 
 ```bash
-npm install hookflow
-# or: pnpm add hookflow / yarn add hookflow
+npm install react-hookflow
+# or: pnpm add react-hookflow / yarn add react-hookflow
 ```
 
 **Requirements:** React **18+** (uses `useSyncExternalStore`), Node **18+** for development. Works in all evergreen browsers.
 
 ---
 
-## Why hookflow? (before / after)
+## Why react-hookflow? (before / after)
 
-The promise is specific and measurable: **for the workflows it targets, hookflow cuts the boilerplate by roughly half or more.** Here is the evidence, not a slogan.
+The promise is specific and measurable: **for the workflows it targets, react-hookflow cuts the boilerplate by roughly half or more.** Here is the evidence, not a slogan.
 
 ### Debounced, cancelable search (`useDebouncedAsync`)
 
@@ -165,18 +165,18 @@ See [`docs/`](./docs/README.md) for the full reference with examples, options, r
 
 ---
 
-## When to use hookflow vs. alternatives
+## When to use react-hookflow vs. alternatives
 
-hookflow is deliberately **not** a data-fetching framework or a form framework. Reach for the right tool:
+react-hookflow is deliberately **not** a data-fetching framework or a form framework. Reach for the right tool:
 
 | If you need…                                                                   | Use                                                    | Why                                                                                                           |
 | ------------------------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Server cache, query invalidation, retries, pagination, dedup across components | **[TanStack Query](https://tanstack.com/query)** / SWR | hookflow has no global cache. `useAsyncAction`/`useDebouncedAsync` manage _local_ component async state only. |
-| Complex forms: schema validation, field arrays, resolver ecosystem             | **[react-hook-form](https://react-hook-form.com/)**    | hookflow intentionally has no form engine. Pair `useAutosave`/`useUnsavedChanges` with it.                    |
+| Server cache, query invalidation, retries, pagination, dedup across components | **[TanStack Query](https://tanstack.com/query)** / SWR | react-hookflow has no global cache. `useAsyncAction`/`useDebouncedAsync` manage _local_ component async state only. |
+| Complex forms: schema validation, field arrays, resolver ecosystem             | **[react-hook-form](https://react-hook-form.com/)**    | react-hookflow intentionally has no form engine. Pair `useAutosave`/`useUnsavedChanges` with it.                    |
 | A single built-in need already covered by React                                | React's `useState`/`useReducer`                        | Don't add a dependency for something trivial.                                                                 |
-| Debounce, persisted state, autosave, unsaved-change guards, cancelable search  | **hookflow**                                           | These are the workflows it was built to make correct and one-line.                                            |
+| Debounce, persisted state, autosave, unsaved-change guards, cancelable search  | **react-hookflow**                                           | These are the workflows it was built to make correct and one-line.                                            |
 
-hookflow composes cleanly **alongside** these libraries — e.g. `useAutosave` + react-hook-form, or `useDebouncedAsync` feeding a TanStack Query key.
+react-hookflow composes cleanly **alongside** these libraries — e.g. `useAutosave` + react-hook-form, or `useDebouncedAsync` feeding a TanStack Query key.
 
 ---
 

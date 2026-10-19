@@ -1,4 +1,4 @@
-# hookflow documentation
+# react-hookflow documentation
 
 Full reference for every hook. Each flagship page follows the same template:
 
