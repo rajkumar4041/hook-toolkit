@@ -1,0 +1,14 @@
+# Source and config are not published; `files` in package.json whitelists dist.
+# This file is a safety net in case `files` is ever loosened.
+src
+docs
+examples
+*.config.ts
+*.test.ts
+*.test.tsx
+vitest.setup.ts
+tsconfig.json
+.eslintrc.cjs
+.prettierrc.json
+coverage
+.github
