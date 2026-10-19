@@ -42,3 +42,22 @@ export type {
   UseUnsavedChangesOptions,
   UseUnsavedChangesResult,
 } from './hooks/useUnsavedChanges';
+
+// Browser / DOM hooks
+export { useMediaQuery } from './hooks/useMediaQuery';
+export type { UseMediaQueryOptions } from './hooks/useMediaQuery';
+
+export { useWindowSize } from './hooks/useWindowSize';
+export type { WindowSize } from './hooks/useWindowSize';
+
+export { useClickOutside } from './hooks/useClickOutside';
+export type { UseClickOutsideOptions } from './hooks/useClickOutside';
+
+export { useDocumentTitle } from './hooks/useDocumentTitle';
+export type { UseDocumentTitleOptions } from './hooks/useDocumentTitle';
+
+export { useClipboard } from './hooks/useClipboard';
+export type { UseClipboardOptions, UseClipboardResult } from './hooks/useClipboard';
+
+export { useNetworkStatus } from './hooks/useNetworkStatus';
+export type { NetworkStatus } from './hooks/useNetworkStatus';
