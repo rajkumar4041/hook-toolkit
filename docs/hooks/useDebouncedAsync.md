@@ -7,7 +7,7 @@ A search box or autocomplete needs three things that are easy to get wrong: debo
 ## Import
 
 ```ts
-import { useDebouncedAsync } from 'react-hookflow';
+import { useDebouncedAsync } from 'hook-toolkit';
 ```
 
 ## Minimal example

@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-react-hookflow is pre-1.0. During `0.x`, security fixes are applied to the latest published minor version.
+hook-toolkit is pre-1.0. During `0.x`, security fixes are applied to the latest published minor version.
 
 | Version      | Supported |
 | ------------ | --------- |
@@ -28,7 +28,7 @@ If private reporting is unavailable, contact the maintainer directly via the ema
 
 ## Scope notes
 
-react-hookflow ships **no runtime dependencies** and runs entirely in the client. The most relevant risks are:
+hook-toolkit ships **no runtime dependencies** and runs entirely in the client. The most relevant risks are:
 
 - **`usePersistentState`** stores data in `localStorage`/`sessionStorage` in plain text. Never persist secrets or tokens with it.
 - Hooks do not perform network requests themselves; the functions you pass to `useAsyncAction` / `useDebouncedAsync` / `useAutosave` are responsible for safe request handling.

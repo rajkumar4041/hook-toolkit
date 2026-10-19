@@ -1,9 +1,9 @@
 # Reference: primitives & browser hooks
 
-Concise reference for the supporting hooks. All are importable from `react-hookflow` and documented in source via JSDoc.
+Concise reference for the supporting hooks. All are importable from `hook-toolkit` and documented in source via JSDoc.
 
 ```ts
-import { useLatest /* …any hook… */ } from 'react-hookflow';
+import { useLatest /* …any hook… */ } from 'hook-toolkit';
 ```
 
 ---

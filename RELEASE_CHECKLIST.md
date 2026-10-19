@@ -39,8 +39,8 @@ Run through this before the first publish (and before each major release).
 
 ## Publish
 
-- [ ] npm package name is available / owned (`npm view react-hookflow`).
+- [ ] npm package name is available / owned (`npm view hook-toolkit`).
 - [ ] `NPM_TOKEN` secret configured for the Release workflow (automated path).
 - [ ] Version bumped and tagged (`npm version ...`).
 - [ ] GitHub Release created → Release workflow publishes with provenance.
-- [ ] Post-publish: `npm view react-hookflow` shows the new version; a fresh `npm install react-hookflow` in a scratch project works.
+- [ ] Post-publish: `npm view hook-toolkit` shows the new version; a fresh `npm install hook-toolkit` in a scratch project works.

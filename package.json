@@ -1,5 +1,5 @@
 {
-  "name": "react-hookflow",
+  "name": "hook-toolkit",
   "version": "0.1.0",
   "description": "Production-ready React hooks that eliminate entire repetitive workflows — autosave, async actions, debounced search, persistent state, and unsaved-changes guards — not just another grab-bag of primitives.",
   "type": "module",

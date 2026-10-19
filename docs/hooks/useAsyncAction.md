@@ -7,7 +7,7 @@ Every button that triggers an async operation needs the same plumbing: a loading
 ## Import
 
 ```ts
-import { useAsyncAction } from 'react-hookflow';
+import { useAsyncAction } from 'hook-toolkit';
 ```
 
 ## Minimal example
@@ -77,7 +77,7 @@ useAsyncAction<T, A extends unknown[]>(
 
 ## Edge cases & limitations
 
-- **Cancellation** only aborts the network if your `fn` passes `signal` to `fetch`/XHR. Without it, react-hookflow still protects against stale state updates, but the request itself keeps running.
+- **Cancellation** only aborts the network if your `fn` passes `signal` to `fetch`/XHR. Without it, hook-toolkit still protects against stale state updates, but the request itself keeps running.
 - **Unmount:** the in-flight run is aborted and no state is set after unmount.
 - **Not a cache.** For shared server state, dedup, and invalidation across components, use TanStack Query. This hook manages one component's async action.
 
