@@ -167,29 +167,51 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 
 ## Hook directory
 
-### 🚩 Flagship workflow hooks
+**22 hooks** across four categories. Jump to any hook's full entry in the [Complete API reference](#complete-api-reference).
 
-| Hook                                                       | What it eliminates                                                       |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [`usePersistentState`](./docs/hooks/usePersistentState.md) | localStorage/sessionStorage + cross-tab sync + SSR/hydration safety      |
-| [`useAsyncAction`](./docs/hooks/useAsyncAction.md)         | loading/error state + double-submit guard + cancellation + stale results |
-| [`useDebouncedAsync`](./docs/hooks/useDebouncedAsync.md)   | debounce + cancellation + stale-result protection (search/autocomplete)  |
-| [`useAutosave`](./docs/hooks/useAutosave.md)               | debounced save + status machine + failure handling                       |
-| [`useUnsavedChanges`](./docs/hooks/useUnsavedChanges.md)   | `beforeunload` guard + router navigation confirmation                    |
+### 🚩 Flagship workflow hooks (5)
 
-### 🔧 Primitives
+| #   | Hook                                        | What it eliminates                                                       |
+| --- | ------------------------------------------- | ------------------------------------------------------------------------ |
+| 1   | [`usePersistentState`](#usepersistentstate) | localStorage/sessionStorage + cross-tab sync + SSR/hydration safety      |
+| 2   | [`useAsyncAction`](#useasyncaction)         | loading/error state + double-submit guard + cancellation + stale results |
+| 3   | [`useDebouncedAsync`](#usedebouncedasync)   | debounce + cancellation + stale-result protection (search/autocomplete)  |
+| 4   | [`useAutosave`](#useautosave)               | debounced save + status machine + failure handling                       |
+| 5   | [`useUnsavedChanges`](#useunsavedchanges)   | `beforeunload` guard + router navigation confirmation                    |
 
-`useLatest` · `useIsMounted` · `usePrevious` · `useDebounce` · `useEventListener` · `useInterval` · `useTimeout` · `useToggle` · `useCounter`
+### 🔧 Primitives (9)
 
-### 🌐 Browser / DOM
+| #   | Hook                                | Purpose                                                 |
+| --- | ----------------------------------- | ------------------------------------------------------- |
+| 6   | [`useLatest`](#primitives-1)        | always-fresh ref to avoid stale closures                |
+| 7   | [`useIsMounted`](#primitives-1)     | guard `setState` after `await`                          |
+| 8   | [`usePrevious`](#primitives-1)      | value from the previous render                          |
+| 9   | [`useDebounce`](#primitives-1)      | debounced value                                         |
+| 10  | [`useEventListener`](#primitives-1) | typed, auto-cleanup DOM event listener (SSR-safe)       |
+| 11  | [`useInterval`](#primitives-1)      | `setInterval` with no stale-closure bugs; `null` pauses |
+| 12  | [`useTimeout`](#primitives-1)       | `setTimeout` with cleanup; `null` disables              |
+| 13  | [`useToggle`](#primitives-1)        | boolean with `toggle`/`setOn`/`setOff`/`set`            |
+| 14  | [`useCounter`](#primitives-1)       | numeric counter with clamping and step                  |
 
-`useMediaQuery` · `useWindowSize` · `useClickOutside` · `useDocumentTitle` · `useClipboard` · `useNetworkStatus` · `useWebSocket`
+### 🌐 Browser / DOM (7)
 
-### 🧩 UI state
+| #   | Hook                                  | Purpose                                                   |
+| --- | ------------------------------------- | --------------------------------------------------------- |
+| 15  | [`useMediaQuery`](#browser--dom-1)    | match a CSS media query reactively                        |
+| 16  | [`useWindowSize`](#browser--dom-1)    | viewport dimensions, updated on resize                    |
+| 17  | [`useClickOutside`](#browser--dom-1)  | detect clicks outside an element                          |
+| 18  | [`useDocumentTitle`](#browser--dom-1) | set `document.title`, optional restore                    |
+| 19  | [`useClipboard`](#browser--dom-1)     | copy text with success/error feedback                     |
+| 20  | [`useNetworkStatus`](#browser--dom-1) | online/offline status                                     |
+| 21  | [`useWebSocket`](#browser--dom-1)     | WebSocket connection with state, send, reconnect, cleanup |
 
-`useDisclosure` (modal/drawer/dialog state with a typed data payload)
+### 🧩 UI state (1)
 
-Per-hook deep-dive pages live in [`docs/`](./docs/README.md). The complete reference is also inline below.
+| #   | Hook                         | Purpose                                                  |
+| --- | ---------------------------- | -------------------------------------------------------- |
+| 22  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+
+Per-hook deep-dive pages for the flagships live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
 ---
 
