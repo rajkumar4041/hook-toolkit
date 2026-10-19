@@ -30,7 +30,6 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.{test,spec}.{ts,tsx}'],
-      env: { 'vitest/globals': true },
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
       },
