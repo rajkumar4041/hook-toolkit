@@ -11,7 +11,7 @@
 
 📖 **Documentation site:** [hook-toolkit-document-8azd.vercel.app](https://hook-toolkit-document-8azd.vercel.app/)
 
-> **Current version:** `0.3.0` — 25 hooks.
+> **Current version:** `0.2.1` — 25 hooks.
 
 `hook-toolkit` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
 

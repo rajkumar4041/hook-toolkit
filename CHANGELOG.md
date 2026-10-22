@@ -6,7 +6,7 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [0.3.0] - 2026-10-22
+## [0.2.1] - 2026-10-22
 
 ### Added
 
@@ -57,7 +57,7 @@ Initial pre-release. 20 hooks, zero runtime dependencies, React 18+.
 - ESLint (rules-of-hooks, no `any`) + Prettier.
 - GitHub Actions CI on Node 18/20/22; release workflow with npm provenance.
 
-[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.0...v0.3.0
+[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/rajkumar4041/react-hooks/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rajkumar4041/react-hooks/releases/tag/v0.1.0
