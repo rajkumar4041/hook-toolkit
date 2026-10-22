@@ -6,6 +6,16 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-22
+
+### Added
+
+Data-fetching / resilience hooks (zero-dependency, SSR-safe, tested):
+
+- `useRetry` — retry an async action with configurable attempts and exponential backoff; `run`/`cancel`/`reset`, `attempt` count, abortable backoff.
+- `usePolling` — poll an async function on an interval with no overlap (schedule-after-settle), `start`/`stop`/`refresh`, abort on stop/unmount.
+- `useInfiniteScroll` — `IntersectionObserver`-based sentinel that calls `onLoadMore` when scrolled into view.
+
 ## [0.2.0] - 2026-10-19
 
 ### Added
@@ -47,6 +57,7 @@ Initial pre-release. 20 hooks, zero runtime dependencies, React 18+.
 - ESLint (rules-of-hooks, no `any`) + Prettier.
 - GitHub Actions CI on Node 18/20/22; release workflow with npm provenance.
 
-[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/rajkumar4041/react-hooks/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rajkumar4041/react-hooks/releases/tag/v0.1.0

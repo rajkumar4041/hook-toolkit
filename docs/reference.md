@@ -163,6 +163,44 @@ const { isConnected, sendData, reconnect } = useWebSocket<ChatMessage>({
 
 ---
 
+## Data fetching
+
+### `useRetry<T>(fn, { retries?, delay?, backoff?, onRetry?, shouldRetry? })`
+
+Runs an async action and retries on failure with exponential backoff. `fn` receives an `AbortSignal` first. Returns `{ run, data, error, status, attempt, isLoading, isSuccess, isError, cancel, reset }`. `run` never rejects (resolves `{ data, error }`); `cancel` aborts the in-flight run including a pending backoff wait; cleaned up on unmount.
+
+```tsx
+const { run, attempt, error } = useRetry(
+  (signal) => fetch('/api/flaky', { signal }).then((r) => r.json()),
+  { retries: 4, delay: 400, backoff: 2, shouldRetry: (e) => !/4\d\d/.test(e.message) },
+);
+```
+
+### `usePolling<T>(fn, { interval, enabled?, immediate?, onError? })`
+
+Periodically runs `fn(signal)` and exposes the latest result. The next poll is scheduled only after the previous settles (no overlap). Returns `{ data, error, isPolling, lastUpdated, start, stop, refresh }`. Aborts in-flight work on stop/unmount. For a full server cache, prefer TanStack Query's `refetchInterval`.
+
+```tsx
+const { data, isPolling, stop } = usePolling(
+  (signal) => fetch('/api/status', { signal }).then((r) => r.json()),
+  { interval: 5000 },
+);
+```
+
+### `useInfiniteScroll<T>(onLoadMore, { enabled?, root?, rootMargin?, threshold? }): { ref }`
+
+Calls `onLoadMore` when a sentinel element scrolls into view (via `IntersectionObserver`). Fires once per entry into view, not continuously. Attach `ref` to a sentinel at the end of your list and gate `enabled` on your loading/has-more flags. SSR-safe.
+
+```tsx
+const { ref } = useInfiniteScroll(loadNextPage, {
+  enabled: hasMore && !loading,
+  rootMargin: '200px',
+});
+// <li ref={ref} aria-hidden /> at the end of the list
+```
+
+---
+
 ## UI state
 
 ### `useDisclosure<T>(initialOpen = false, { onOpen?, onClose? }): { opened, data, open, close, toggle }`
