@@ -1,0 +1,255 @@
+# Migrating from `@tanstack/react-query` to `useFetch` / `useMutation`
+
+`hook-toolkit` ships **`useFetch`** and **`useMutation`** as lightweight, typed
+stand-ins for simple `useQuery` / `useMutation` usage — just `data`, loading,
+and `error`, with zero runtime dependencies.
+
+## When to migrate — and when NOT to
+
+**Good fit** (what these hooks cover):
+
+- A component loads data by some keys and shows loading/error.
+- A form/button performs a mutation and shows pending/error.
+- You want `keepPreviousData` for pagination.
+
+**Stay on TanStack Query if you rely on any of:**
+
+- A shared **cache** across components, or **query invalidation** after mutations.
+- Request **deduplication**, `staleTime`/`gcTime`, background refetch, `refetchOnWindowFocus`.
+- Retries/`retryDelay`, infinite queries, suspense, devtools.
+
+`useFetch`/`useMutation` deliberately omit all of the above. Mixing is fine —
+migrate the simple hooks and leave cache-dependent ones on TanStack Query.
+
+## Option mapping
+
+### `useQuery` → `useFetch`
+
+| `useQuery`                                                                    | `useFetch`               | Notes                                                               |
+| ----------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------- |
+| `queryKey`                                                                    | `queryKey`               | same — array of values; refetches on change                         |
+| `queryFn: async () => …`                                                      | `queryFn: (signal) => …` | pass `signal` to `fetch` for cancellation                           |
+| `enabled`                                                                     | `enabled`                | same                                                                |
+| `placeholderData: keepPreviousData`                                           | `keepPreviousData: true` | keeps current data while a new key loads                            |
+| `refetchOnWindowFocus: false`                                                 | —                        | not implemented (nothing to disable)                                |
+| `data`, `error`, `isLoading`, `isFetching`, `isError`, `isSuccess`, `refetch` | same names               | `isLoading` = first load with no data; `isFetching` = any in-flight |
+| `isFetched`, `isPlaceholderData`, `status: 'pending'`                         | —                        | not provided                                                        |
+
+### `useMutation` → `useMutation`
+
+| TanStack                                                                | hook-toolkit           | Notes                                                             |
+| ----------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------- |
+| `mutationFn`                                                            | `mutationFn` (1st arg) | same signature                                                    |
+| `mutate`, `mutateAsync`                                                 | same                   | `mutateAsync` **rejects** on error; `mutate` is fire-and-forget   |
+| `isPending`, `isError`, `isSuccess`, `isIdle`, `data`, `error`, `reset` | same names             | —                                                                 |
+| `onMutate`, `onSuccess`, `onError`, `onSettled`                         | same                   | `onMutate` here does not support optimistic rollback context      |
+| `onSuccess` invalidating queries                                        | —                      | no cache to invalidate; refetch manually via `useFetch().refetch` |
+
+---
+
+## Example 1 — a paginated list query
+
+### Before (`@tanstack/react-query`)
+
+```ts
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
+export const usePatientAllergyList = ({
+  patientUuid,
+  pagination,
+  gridSorting,
+  status,
+  archive,
+  searchString,
+  xTENANTID,
+  appointmentId,
+  providerStatus,
+  enabled = true,
+}: Props): useBaseContent<OptionData> => {
+  const prevPage = useRef<number>(pagination.page);
+  const pageIndex = getPageIndexWhileSearch({ pagination, searchKey: searchString, prevPage });
+  const pageSize = getPageSize(searchString, pagination);
+  const sortData = gridSorting?.[0];
+  const skip = useEncounterCreationGate();
+
+  return useQuery({
+    queryKey: [
+      'patient-allergy-list',
+      patientUuid,
+      pageIndex,
+      pageSize,
+      gridSorting,
+      status,
+      archive,
+      searchString,
+      appointmentId,
+      providerStatus,
+      xTENANTID,
+      sortData,
+    ],
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
+    enabled: enabled && !skip,
+    queryFn: async () =>
+      await new PatientAllergyControllerApi(getConfigObject())
+        .getPatientAllergy(
+          pageIndex,
+          pageSize,
+          sortData?.field,
+          sortData?.sort ?? undefined,
+          patientUuid,
+          appointmentId,
+          status,
+          archive,
+          providerStatus,
+          searchString,
+          xTENANTID,
+        )
+        .then((res) => res?.data),
+  });
+};
+```
+
+### After (`hook-toolkit`)
+
+```ts
+import { useFetch } from 'hook-toolkit';
+
+export const usePatientAllergyList = ({
+  patientUuid,
+  pagination,
+  gridSorting,
+  status,
+  archive,
+  searchString,
+  xTENANTID,
+  appointmentId,
+  providerStatus,
+  enabled = true,
+}: Props) => {
+  const prevPage = useRef<number>(pagination.page);
+  const pageIndex = getPageIndexWhileSearch({ pagination, searchKey: searchString, prevPage });
+  const pageSize = getPageSize(searchString, pagination);
+  const sortData = gridSorting?.[0];
+  const skip = useEncounterCreationGate();
+
+  return useFetch({
+    queryKey: [
+      'patient-allergy-list',
+      patientUuid,
+      pageIndex,
+      pageSize,
+      gridSorting,
+      status,
+      archive,
+      searchString,
+      appointmentId,
+      providerStatus,
+      xTENANTID,
+      sortData,
+    ],
+    enabled: enabled && !skip,
+    keepPreviousData: true,
+    queryFn: (signal) =>
+      new PatientAllergyControllerApi(getConfigObject())
+        .getPatientAllergy(
+          pageIndex,
+          pageSize,
+          sortData?.field,
+          sortData?.sort ?? undefined,
+          patientUuid,
+          appointmentId,
+          status,
+          archive,
+          providerStatus,
+          searchString,
+          xTENANTID,
+        )
+        .then((res) => res?.data),
+  });
+};
+```
+
+**Diff:** import swapped, `placeholderData: keepPreviousData` → `keepPreviousData: true`,
+`refetchOnWindowFocus` removed, `queryFn` now takes `signal`. Consumers reading
+`data` / `isLoading` / `isError` / `refetch` keep working.
+
+> If your `useBaseContent<T>` return type requires fields `useFetch` doesn't
+> expose (e.g. `isFetched`, `isPlaceholderData`), either widen that type or map
+> the result: `const q = useFetch(...); return { ...q, isFetched: q.isSuccess };`
+
+---
+
+## Example 2 — a create mutation (with a global loading wrapper)
+
+### Before
+
+```ts
+import { useMutation } from '@tanstack/react-query';
+
+export const useMutationWithLoading = <TData, TVariables>(
+  mutationFn: (variables: TVariables) => Promise<TData>,
+  options?: MutationOptions<TData, unknown, TVariables>,
+) => {
+  const { setIsLoading } = useLoadingContext();
+  return useMutation<TData, unknown, TVariables>({
+    ...options,
+    mutationFn: async (variables) => {
+      setIsLoading(true);
+      return mutationFn(variables).finally(() => setIsLoading(false));
+    },
+  });
+};
+
+export const usePatientAllergiesCreate = () =>
+  useMutationWithLoading(async (params: { patientAllergy: Patientallergy; xTENANTID?: string }) =>
+    new PatientAllergyControllerApi(getConfigObject()).createPatientAllergy(
+      params.patientAllergy,
+      params.xTENANTID,
+    ),
+  );
+```
+
+### After
+
+```ts
+import { useMutation } from 'hook-toolkit';
+
+export const useMutationWithLoading = <TData, TVariables>(
+  mutationFn: (variables: TVariables) => Promise<TData>,
+  options?: Parameters<typeof useMutation<TData, TVariables>>[1],
+) => {
+  const { setIsLoading } = useLoadingContext();
+  return useMutation<TData, TVariables>(async (variables) => {
+    setIsLoading(true);
+    return mutationFn(variables).finally(() => setIsLoading(false));
+  }, options);
+};
+
+// usePatientAllergiesCreate is unchanged:
+export const usePatientAllergiesCreate = () =>
+  useMutationWithLoading(async (params: { patientAllergy: Patientallergy; xTENANTID?: string }) =>
+    new PatientAllergyControllerApi(getConfigObject()).createPatientAllergy(
+      params.patientAllergy,
+      params.xTENANTID,
+    ),
+  );
+
+// Consumer is unchanged:
+const { mutateAsync: createAllergy } = usePatientAllergiesCreate();
+await createAllergy({ patientAllergy, xTENANTID });
+```
+
+**Diff:** import swapped; the options object becomes positional args
+(`useMutation(mutationFn, options)` instead of `useMutation({ mutationFn, ...options })`).
+`mutateAsync` still rejects on error, so the `.finally()` and any `try/catch`
+behave identically.
+
+---
+
+## Gotcha checklist
+
+- [ ] Pass `signal` into `fetch`/XHR in `queryFn` if you want real cancellation.
+- [ ] After a mutation that changes list data, call the query's `refetch()` yourself (no automatic invalidation).
+- [ ] If a hook's return type names TanStack-only fields, map or widen it (see note above).
+- [ ] Keep cache-dependent hooks on TanStack Query.

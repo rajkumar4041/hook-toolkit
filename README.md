@@ -524,6 +524,8 @@ hook-toolkit is deliberately **not** a data-fetching framework or a form framewo
 | A single built-in need already covered by React                                | React's `useState`/`useReducer`                        | Don't add a dependency for something trivial.                                                                     |
 | Debounce, persisted state, autosave, unsaved-change guards, cancelable search  | **hook-toolkit**                                       | These are the workflows it was built to make correct and one-line.                                                |
 
+For **simple** `useQuery`/`useMutation` usage (data + loading + error, no shared cache), `useFetch`/`useMutation` are a zero-dependency drop-in — see the [migration guide from TanStack Query](./docs/migration/from-tanstack-query.md).
+
 hook-toolkit composes cleanly **alongside** these libraries — e.g. `useAutosave` + react-hook-form, or `useDebouncedAsync` feeding a TanStack Query key.
 
 ---
