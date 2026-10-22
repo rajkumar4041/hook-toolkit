@@ -62,3 +62,12 @@ export type {
   UseWebSocketReturn,
   WebSocketSendable,
 } from './hooks/useWebSocket';
+
+export { useRetry } from './hooks/useRetry';
+export type { RetryStatus, UseRetryOptions, UseRetry } from './hooks/useRetry';
+
+export { usePolling } from './hooks/usePolling';
+export type { UsePollingOptions, UsePolling } from './hooks/usePolling';
+
+export { useInfiniteScroll } from './hooks/useInfiniteScroll';
+export type { UseInfiniteScrollOptions, UseInfiniteScrollResult } from './hooks/useInfiniteScroll';
