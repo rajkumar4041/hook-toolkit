@@ -19,7 +19,7 @@
 - **TypeScript-first.** Full generics and inference; no `any` in the codebase.
 - **SSR-safe & Strict-Mode safe.** Browser hooks never touch `window`/`document` during server render and avoid hydration mismatches.
 - **Tree-shakeable.** ESM + CJS builds, `sideEffects: false`.
-- **Tested.** 98 tests covering async/cancellation/stale-results, SSR, timers, and cleanup.
+- **Tested.** 128 tests covering async/cancellation/stale-results/retry, SSR, timers, observers, and cleanup.
 
 ---
 
@@ -172,7 +172,7 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 
 ## Hook directory
 
-**22 hooks** across four categories. Jump to any hook's full entry in the [Complete API reference](#complete-api-reference).
+**25 hooks** across five categories. Jump to any hook's full entry in the [Complete API reference](#complete-api-reference).
 
 ### 🚩 Flagship workflow hooks (5)
 
@@ -210,11 +210,19 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 20  | [`useNetworkStatus`](#browser--dom-1) | online/offline status                                     |
 | 21  | [`useWebSocket`](#browser--dom-1)     | WebSocket connection with state, send, reconnect, cleanup |
 
+### 📡 Data fetching (3)
+
+| #   | Hook                                  | Purpose                                           |
+| --- | ------------------------------------- | ------------------------------------------------- |
+| 22  | [`useRetry`](#data-fetching)          | retry an async action with exponential backoff    |
+| 23  | [`usePolling`](#data-fetching)        | poll an async function on an interval, no overlap |
+| 24  | [`useInfiniteScroll`](#data-fetching) | load more when a sentinel scrolls into view       |
+
 ### 🧩 UI state (1)
 
 | #   | Hook                         | Purpose                                                  |
 | --- | ---------------------------- | -------------------------------------------------------- |
-| 22  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+| 25  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
 
 Per-hook deep-dive pages for the flagships live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
@@ -444,6 +452,31 @@ const { isConnected, sendData } = useWebSocket<ChatMessage>({
   onMessageReceived: (e) => appendMessage(e.data),
 });
 sendData(JSON.stringify(msg)); // returns false (dropped) until isConnected
+```
+
+### Data fetching
+
+```tsx
+// useRetry(fn, { retries?, delay?, backoff?, onRetry?, shouldRetry? })
+//   -> { run, data, error, status, attempt, isLoading, cancel, reset }
+const { run, attempt, isLoading } = useRetry(
+  (signal) => fetch('/api/flaky', { signal }).then((r) => r.json()),
+  { retries: 4, delay: 400, backoff: 2 },
+);
+
+// usePolling(fn, { interval, enabled?, immediate?, onError? })
+//   -> { data, error, isPolling, lastUpdated, start, stop, refresh }
+const { data, stop } = usePolling(
+  (signal) => fetch('/api/status', { signal }).then((r) => r.json()),
+  { interval: 5000 },
+);
+
+// useInfiniteScroll(onLoadMore, { enabled?, rootMargin?, root?, threshold? })
+//   -> { ref }  (attach to a sentinel at the end of the list)
+const { ref } = useInfiniteScroll(() => loadNextPage(), {
+  enabled: hasMore && !isLoading,
+  rootMargin: '200px',
+});
 ```
 
 ### UI state

@@ -6,6 +6,16 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+Data-fetching / resilience hooks (zero-dependency, SSR-safe, tested):
+
+- `useRetry` — retry an async action with configurable attempts and exponential backoff; `run`/`cancel`/`reset`, `attempt` count, abortable backoff.
+- `usePolling` — poll an async function on an interval with no overlap (schedule-after-settle), `start`/`stop`/`refresh`, abort on stop/unmount.
+- `useInfiniteScroll` — `IntersectionObserver`-based sentinel that calls `onLoadMore` when scrolled into view.
+
+> Note: developed on a branch off `0.2.0` in parallel with the `0.3.0` hooks; the released version number will be assigned at merge.
+
 ## [0.2.0] - 2026-10-19
 
 ### Added
