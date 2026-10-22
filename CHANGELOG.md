@@ -6,6 +6,17 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-10-22
+
+### Added
+
+TanStack-Query-lite data hooks (typed, loading + error, zero-dependency — no cache/dedup/retries):
+
+- `useFetch<T>` — declarative query via `queryKey` + `queryFn(signal)`, with `enabled`, `keepPreviousData`, `refetch`, abort-on-key-change, and stale-result protection.
+- `useMutation<TData, TVars>` — `mutate` (fire-and-forget) + `mutateAsync` (awaitable, rejects on error), `isPending`/`error`/`data`/`reset`, and `onMutate`/`onSuccess`/`onError`/`onSettled` callbacks.
+
+Intended as a lightweight replacement for simple `@tanstack/react-query` `useQuery`/`useMutation` usage.
+
 ## [0.2.1] - 2026-10-22
 
 ### Added
@@ -57,7 +68,8 @@ Initial pre-release. 20 hooks, zero runtime dependencies, React 18+.
 - ESLint (rules-of-hooks, no `any`) + Prettier.
 - GitHub Actions CI on Node 18/20/22; release workflow with npm provenance.
 
-[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/rajkumar4041/react-hooks/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/rajkumar4041/react-hooks/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rajkumar4041/react-hooks/releases/tag/v0.1.0

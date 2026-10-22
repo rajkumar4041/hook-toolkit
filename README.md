@@ -11,7 +11,7 @@
 
 📖 **Documentation site:** [hook-toolkit-document-8azd.vercel.app](https://hook-toolkit-document-8azd.vercel.app/)
 
-> **Current version:** `0.2.1` — 25 hooks.
+> **Current version:** `0.2.2` — 27 hooks.
 
 `hook-toolkit` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
 
@@ -19,7 +19,7 @@
 - **TypeScript-first.** Full generics and inference; no `any` in the codebase.
 - **SSR-safe & Strict-Mode safe.** Browser hooks never touch `window`/`document` during server render and avoid hydration mismatches.
 - **Tree-shakeable.** ESM + CJS builds, `sideEffects: false`.
-- **Tested.** 128 tests covering async/cancellation/stale-results/retry, SSR, timers, observers, and cleanup.
+- **Tested.** 142 tests covering async/cancellation/stale-results/retry, SSR, timers, observers, and cleanup.
 
 ---
 
@@ -172,7 +172,7 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 
 ## Hook directory
 
-**25 hooks** across five categories. Jump to any hook's full entry in the [Complete API reference](#complete-api-reference).
+**27 hooks** across five categories. Jump to any hook's full entry in the [Complete API reference](#complete-api-reference).
 
 ### 🚩 Flagship workflow hooks (5)
 
@@ -210,19 +210,21 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 20  | [`useNetworkStatus`](#browser--dom-1) | online/offline status                                     |
 | 21  | [`useWebSocket`](#browser--dom-1)     | WebSocket connection with state, send, reconnect, cleanup |
 
-### 📡 Data fetching (3)
+### 📡 Data fetching (5)
 
-| #   | Hook                                  | Purpose                                           |
-| --- | ------------------------------------- | ------------------------------------------------- |
-| 22  | [`useRetry`](#data-fetching)          | retry an async action with exponential backoff    |
-| 23  | [`usePolling`](#data-fetching)        | poll an async function on an interval, no overlap |
-| 24  | [`useInfiniteScroll`](#data-fetching) | load more when a sentinel scrolls into view       |
+| #   | Hook                                  | Purpose                                                             |
+| --- | ------------------------------------- | ------------------------------------------------------------------- |
+| 22  | [`useFetch`](#data-fetching)          | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
+| 23  | [`useMutation`](#data-fetching)       | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
+| 24  | [`useRetry`](#data-fetching)          | retry an async action with exponential backoff                      |
+| 25  | [`usePolling`](#data-fetching)        | poll an async function on an interval, no overlap                   |
+| 26  | [`useInfiniteScroll`](#data-fetching) | load more when a sentinel scrolls into view                         |
 
 ### 🧩 UI state (1)
 
 | #   | Hook                         | Purpose                                                  |
 | --- | ---------------------------- | -------------------------------------------------------- |
-| 25  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+| 27  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
 
 Per-hook deep-dive pages for the flagships live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
@@ -457,6 +459,22 @@ sendData(JSON.stringify(msg)); // returns false (dropped) until isConnected
 ### Data fetching
 
 ```tsx
+// useFetch<T>({ queryKey, queryFn, enabled?, keepPreviousData? })
+//   -> { data, error, isLoading, isFetching, isError, isSuccess, refetch }
+const { data, isLoading, isError, refetch } = useFetch({
+  queryKey: ['user', id],
+  queryFn: (signal) => fetch(`/api/users/${id}`, { signal }).then((r) => r.json()),
+  enabled: id != null,
+  keepPreviousData: true, // keep current page while the next loads
+});
+
+// useMutation<TData, TVars>(mutationFn, { onMutate?, onSuccess?, onError?, onSettled? })
+//   -> { mutate, mutateAsync, data, error, isPending, isError, isSuccess, reset }
+const { mutateAsync: createUser, isPending } = useMutation((vars: { name: string }) =>
+  fetch('/api/users', { method: 'POST', body: JSON.stringify(vars) }),
+);
+await createUser({ name: 'Ada' }); // mutateAsync rejects on error (try/catch)
+
 // useRetry(fn, { retries?, delay?, backoff?, onRetry?, shouldRetry? })
 //   -> { run, data, error, status, attempt, isLoading, cancel, reset }
 const { run, attempt, isLoading } = useRetry(
