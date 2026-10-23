@@ -165,6 +165,32 @@ const { isConnected, sendData, reconnect } = useWebSocket<ChatMessage>({
 
 ## Data fetching
 
+### `useFetch<T>({ queryKey, queryFn, enabled?, keepPreviousData? }): { data, error, isLoading, isFetching, isError, isSuccess, isIdle, refetch }`
+
+A tiny, typed, TanStack-Query-style query hook — data/loading/error + `refetch`, driven by `queryKey` + `queryFn(signal)`. **No cache, dedup, retries, or window-focus refetch** (use TanStack Query when you need those). Refetches when `queryKey` changes, aborts the previous request, and protects against stale responses. `keepPreviousData` keeps the current data visible while a new key loads (pagination). SSR-safe.
+
+```tsx
+const { data, isLoading, isError, refetch } = useFetch({
+  queryKey: ['patient-allergy-list', patientUuid, pageIndex, pageSize],
+  enabled: enabled && !skip,
+  keepPreviousData: true,
+  queryFn: (signal) => api.getPatientAllergy(/* … */, { signal }).then((r) => r.data),
+});
+```
+
+### `useMutation<TData, TVars>(mutationFn, { onMutate?, onSuccess?, onError?, onSettled? }): { mutate, mutateAsync, data, error, status, isIdle, isPending, isError, isSuccess, reset }`
+
+A tiny, typed, TanStack-Query-style mutation hook for POST/PUT/DELETE. `mutate` is fire-and-forget (errors → `onError`/`error`); `mutateAsync` is awaitable and **rejects** on error (so `await`/`try-catch`/`.finally()` work). Only the latest mutation updates state; updates after unmount are suppressed.
+
+```tsx
+const { mutateAsync: createAllergy, isPending } = useMutation(
+  (vars: { patientAllergy: Allergy; xTENANTID?: string }) =>
+    api.createPatientAllergy(vars.patientAllergy, vars.xTENANTID),
+  { onSuccess: () => toast('Saved') },
+);
+await createAllergy({ patientAllergy, xTENANTID });
+```
+
 ### `useRetry<T>(fn, { retries?, delay?, backoff?, onRetry?, shouldRetry? })`
 
 Runs an async action and retries on failure with exponential backoff. `fn` receives an `AbortSignal` first. Returns `{ run, data, error, status, attempt, isLoading, isSuccess, isError, cancel, reset }`. `run` never rejects (resolves `{ data, error }`); `cancel` aborts the in-flight run including a pending backoff wait; cleaned up on unmount.

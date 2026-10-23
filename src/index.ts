@@ -71,3 +71,14 @@ export type { UsePollingOptions, UsePolling } from './hooks/usePolling';
 
 export { useInfiniteScroll } from './hooks/useInfiniteScroll';
 export type { UseInfiniteScrollOptions, UseInfiniteScrollResult } from './hooks/useInfiniteScroll';
+
+export { useFetch } from './hooks/useFetch';
+export type { UseFetchOptions, UseFetchResult } from './hooks/useFetch';
+
+export { useMutation } from './hooks/useMutation';
+export type { MutationStatus, UseMutationOptions, UseMutation } from './hooks/useMutation';
+
+export { useInvalidateQueries } from './hooks/useInvalidateQueries';
+export type { InvalidateQueries } from './hooks/useInvalidateQueries';
+export { invalidateQueries } from './hooks/queryRegistry';
+export type { InvalidateOptions } from './hooks/queryRegistry';

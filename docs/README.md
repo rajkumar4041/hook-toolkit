@@ -23,6 +23,10 @@ Full reference for every hook. Each flagship page follows the same template:
 
 - [Reference](./reference.md) — `useLatest`, `useIsMounted`, `usePrevious`, `useDebounce`, `useEventListener`, `useInterval`, `useTimeout`, `useToggle`, `useCounter`, `useMediaQuery`, `useWindowSize`, `useClickOutside`, `useDocumentTitle`, `useClipboard`, `useNetworkStatus`
 
+## Guides
+
+- [Migrating from `@tanstack/react-query`](./migration/from-tanstack-query.md) — swap simple `useQuery`/`useMutation` for `useFetch`/`useMutation`, with before/after examples.
+
 ## Conventions
 
 - **Options are always a trailing object** with sensible defaults — basic usage never requires it.
