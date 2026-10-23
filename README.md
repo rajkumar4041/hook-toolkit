@@ -11,7 +11,7 @@
 
 📖 **Documentation site:** [hook-toolkit-document-8azd.vercel.app](https://hook-toolkit-document-8azd.vercel.app/)
 
-> **Current version:** `0.2.2` — 27 hooks.
+> **Current version:** `0.2.4` — 28 hooks.
 
 `hook-toolkit` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
 
@@ -172,7 +172,7 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 
 ## Hook directory
 
-**27 hooks** across five categories. Jump to any hook's full entry in the [Complete API reference](#complete-api-reference).
+**28 hooks** across five categories. Jump to any hook's full entry in the [Complete API reference](#complete-api-reference).
 
 ### 🚩 Flagship workflow hooks (5)
 
@@ -210,21 +210,22 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 20  | [`useNetworkStatus`](#browser--dom-1) | online/offline status                                     |
 | 21  | [`useWebSocket`](#browser--dom-1)     | WebSocket connection with state, send, reconnect, cleanup |
 
-### 📡 Data fetching (5)
+### 📡 Data fetching (6)
 
-| #   | Hook                                  | Purpose                                                             |
-| --- | ------------------------------------- | ------------------------------------------------------------------- |
-| 22  | [`useFetch`](#data-fetching)          | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
-| 23  | [`useMutation`](#data-fetching)       | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
-| 24  | [`useRetry`](#data-fetching)          | retry an async action with exponential backoff                      |
-| 25  | [`usePolling`](#data-fetching)        | poll an async function on an interval, no overlap                   |
-| 26  | [`useInfiniteScroll`](#data-fetching) | load more when a sentinel scrolls into view                         |
+| #   | Hook                                     | Purpose                                                             |
+| --- | ---------------------------------------- | ------------------------------------------------------------------- |
+| 22  | [`useFetch`](#data-fetching)             | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
+| 23  | [`useMutation`](#data-fetching)          | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
+| 24  | [`useInvalidateQueries`](#data-fetching) | refetch mounted `useFetch`es by key (one key or many)               |
+| 25  | [`useRetry`](#data-fetching)             | retry an async action with exponential backoff                      |
+| 26  | [`usePolling`](#data-fetching)           | poll an async function on an interval, no overlap                   |
+| 27  | [`useInfiniteScroll`](#data-fetching)    | load more when a sentinel scrolls into view                         |
 
 ### 🧩 UI state (1)
 
 | #   | Hook                         | Purpose                                                  |
 | --- | ---------------------------- | -------------------------------------------------------- |
-| 27  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+| 28  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
 
 Per-hook deep-dive pages for the flagships live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
@@ -475,6 +476,14 @@ const { mutateAsync: createUser, isPending } = useMutation((vars: { name: string
 );
 await createUser({ name: 'Ada' }); // mutateAsync rejects on error (try/catch)
 
+// useInvalidateQueries() -> invalidate(key | keys, { exact? })
+//   refetch mounted useFetch()es by key — prefix match by default.
+//   Also exported as a standalone invalidateQueries() for use outside React.
+const invalidate = useInvalidateQueries();
+invalidate(['user', id]); // one key (prefix): ['user', id], ['user', id, …]
+invalidate([['user'], ['todos']]); // several keys at once (array of keys)
+invalidate(['user', id], { exact: true }); // only the identical key
+
 // useRetry(fn, { retries?, delay?, backoff?, onRetry?, shouldRetry? })
 //   -> { run, data, error, status, attempt, isLoading, cancel, reset }
 const { run, attempt, isLoading } = useRetry(
@@ -517,14 +526,14 @@ Full reference → [docs/reference.md](./docs/reference.md).
 
 hook-toolkit is deliberately **not** a data-fetching framework or a form framework. Reach for the right tool:
 
-| If you need…                                                                   | Use                                                    | Why                                                                                                               |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| Server cache, query invalidation, retries, pagination, dedup across components | **[TanStack Query](https://tanstack.com/query)** / SWR | hook-toolkit has no global cache. `useAsyncAction`/`useDebouncedAsync` manage _local_ component async state only. |
-| Complex forms: schema validation, field arrays, resolver ecosystem             | **[react-hook-form](https://react-hook-form.com/)**    | hook-toolkit intentionally has no form engine. Pair `useAutosave`/`useUnsavedChanges` with it.                    |
-| A single built-in need already covered by React                                | React's `useState`/`useReducer`                        | Don't add a dependency for something trivial.                                                                     |
-| Debounce, persisted state, autosave, unsaved-change guards, cancelable search  | **hook-toolkit**                                       | These are the workflows it was built to make correct and one-line.                                                |
+| If you need…                                                                                  | Use                                                    | Why                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A shared server **cache**, `staleTime`/`gcTime`, retries, pagination, dedup across components | **[TanStack Query](https://tanstack.com/query)** / SWR | hook-toolkit has no stored data cache. `useFetch` does offer key-based **invalidation** (`useInvalidateQueries`), and `useAsyncAction`/`useDebouncedAsync` manage _local_ component async state. |
+| Complex forms: schema validation, field arrays, resolver ecosystem                            | **[react-hook-form](https://react-hook-form.com/)**    | hook-toolkit intentionally has no form engine. Pair `useAutosave`/`useUnsavedChanges` with it.                                                                                                   |
+| A single built-in need already covered by React                                               | React's `useState`/`useReducer`                        | Don't add a dependency for something trivial.                                                                                                                                                    |
+| Debounce, persisted state, autosave, unsaved-change guards, cancelable search                 | **hook-toolkit**                                       | These are the workflows it was built to make correct and one-line.                                                                                                                               |
 
-For **simple** `useQuery`/`useMutation` usage (data + loading + error, no shared cache), `useFetch`/`useMutation` are a zero-dependency drop-in — see the [migration guide from TanStack Query](./docs/migration/from-tanstack-query.md).
+For **simple** `useQuery`/`useMutation` usage (data + loading + error, plus key-based invalidation, no shared cache), `useFetch`/`useMutation`/`useInvalidateQueries` are a zero-dependency drop-in — see the [migration guide from TanStack Query](./docs/migration/from-tanstack-query.md).
 
 hook-toolkit composes cleanly **alongside** these libraries — e.g. `useAutosave` + react-hook-form, or `useDebouncedAsync` feeding a TanStack Query key.
 
@@ -599,7 +608,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the bar every hook must meet and [R
 
 ## FAQ & troubleshooting
 
-**Is there a global cache like React Query?** No — by design. `useAsyncAction`/`useDebouncedAsync` manage a single component's async state. For shared server cache, dedup, and invalidation, use TanStack Query (they compose well together).
+**Is there a global cache like React Query?** No stored data cache — by design. `useFetch` does support key-based **invalidation** across components (`useInvalidateQueries` / `invalidateQueries`), which refetches mounted queries by key. For a shared server cache, dedup, and `staleTime`, use TanStack Query (they compose well together).
 
 **My `usePersistentState` value flashes the default on first render.** Expected under SSR: the server can't read browser storage, so the value is `initialValue` until hydration completes, then it updates. Gate flash-sensitive UI on a mounted flag.
 

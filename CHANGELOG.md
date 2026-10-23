@@ -6,6 +6,11 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `useInvalidateQueries()` — returns a stable `invalidate(key | keys, { exact? })` that refetches every mounted `useFetch` whose `queryKey` matches, the TanStack-Query `queryClient.invalidateQueries` pattern without a provider or a stored cache. Prefix match by default; `{ exact: true }` for an identical match; pass an array of keys (`[['todos'], ['users']]`) to invalidate several at once (each query refetches at most once).
+- `invalidateQueries(key | keys, options?)` — the same thing as a standalone function for use outside React (e.g. store actions, event handlers).
+
 ## [0.2.2] - 2026-10-22
 
 ### Added
