@@ -277,6 +277,17 @@ function Todos() {
 }
 ```
 
+**Invalidate several keys at once** by passing an array of keys. A key is itself
+an array, so multiple keys are an array _of_ arrays — each matching query still
+refetches at most once:
+
+```ts
+invalidate([['todos'], ['users']]); // refetch all ['todos', …] and all ['users', …]
+```
+
+> Watch the nesting: `invalidate(['todos', 'users'])` is **one** key with two
+> segments (`todos` then `users`), not two keys. Two keys = `[['todos'], ['users']]`.
+
 Need to invalidate outside a component (a plain event handler, a store action)?
 Import the standalone `invalidateQueries` — same signature, no hook required:
 

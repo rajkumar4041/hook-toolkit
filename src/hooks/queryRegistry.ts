@@ -53,18 +53,34 @@ export interface InvalidateOptions {
 }
 
 /**
- * Refetch every mounted `useFetch` whose `queryKey` matches `filterKey`.
- * Prefix match by default; pass `{ exact: true }` for an exact match.
- * Resolves once all triggered refetches settle.
+ * One query key (`['todos', 1]`), or several at once as an array of keys
+ * (`[['todos'], ['users']]`). Several keys are detected when every top-level
+ * element is itself an array — so a normal key whose segments are scalars is
+ * always treated as a single key.
+ */
+export type QueryKeyFilter = unknown[] | unknown[][];
+
+function normalizeKeys(filter: QueryKeyFilter): unknown[][] {
+  const isListOfKeys = filter.length > 0 && filter.every((segment) => Array.isArray(segment));
+  return isListOfKeys ? (filter as unknown[][]) : [filter];
+}
+
+/**
+ * Refetch every mounted `useFetch` whose `queryKey` matches. Pass one key
+ * (`['todos']`) or several (`[['todos'], ['users']]`). Prefix match by default;
+ * pass `{ exact: true }` for an exact match. Each matching query refetches at
+ * most once even if several of the keys match it. Resolves once all triggered
+ * refetches settle.
  */
 export function invalidateQueries(
-  filterKey: unknown[],
+  filter: QueryKeyFilter,
   options: InvalidateOptions = {},
 ): Promise<void> {
   const exact = options.exact ?? false;
+  const keys = normalizeKeys(filter);
   const pending: Array<Promise<void>> = [];
   observers.forEach((observer) => {
-    if (keyMatches(observer.queryKey, filterKey, exact)) {
+    if (keys.some((key) => keyMatches(observer.queryKey, key, exact))) {
       pending.push(Promise.resolve().then(() => observer.refetch()));
     }
   });

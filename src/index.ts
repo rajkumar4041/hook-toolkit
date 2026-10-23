@@ -81,4 +81,4 @@ export type { MutationStatus, UseMutationOptions, UseMutation } from './hooks/us
 export { useInvalidateQueries } from './hooks/useInvalidateQueries';
 export type { InvalidateQueries } from './hooks/useInvalidateQueries';
 export { invalidateQueries } from './hooks/queryRegistry';
-export type { InvalidateOptions } from './hooks/queryRegistry';
+export type { InvalidateOptions, QueryKeyFilter } from './hooks/queryRegistry';

@@ -1,10 +1,13 @@
 import { useCallback } from 'react';
 import { invalidateQueries } from './queryRegistry';
-import type { InvalidateOptions } from './queryRegistry';
+import type { InvalidateOptions, QueryKeyFilter } from './queryRegistry';
 
-export type { InvalidateOptions } from './queryRegistry';
+export type { InvalidateOptions, QueryKeyFilter } from './queryRegistry';
 
-export type InvalidateQueries = (queryKey: unknown[], options?: InvalidateOptions) => Promise<void>;
+export type InvalidateQueries = (
+  filter: QueryKeyFilter,
+  options?: InvalidateOptions,
+) => Promise<void>;
 
 /**
  * Returns a stable `invalidate` function that re-runs every mounted
@@ -15,13 +18,18 @@ export type InvalidateQueries = (queryKey: unknown[], options?: InvalidateOption
  * `['todos']`, `['todos', 1]`, `['todos', { done: true }]`, … Pass
  * `{ exact: true }` to refetch only the identical key.
  *
+ * Invalidate several keys at once by passing an array of keys — each matching
+ * query still refetches at most once:
+ *
  * @example
  * ```tsx
  * const invalidate = useInvalidateQueries();
  *
  * const { mutate: addTodo } = useMutation(createTodo, {
- *   onSuccess: () => invalidate(['todos']),
+ *   onSuccess: () => invalidate(['todos']),            // one key
  * });
+ *
+ * invalidate([['todos'], ['users']]);                  // several keys
  * ```
  *
  * For calls outside React (or where you don't want a hook), import the
@@ -29,7 +37,7 @@ export type InvalidateQueries = (queryKey: unknown[], options?: InvalidateOption
  */
 export function useInvalidateQueries(): InvalidateQueries {
   return useCallback(
-    (queryKey: unknown[], options?: InvalidateOptions) => invalidateQueries(queryKey, options),
+    (filter: QueryKeyFilter, options?: InvalidateOptions) => invalidateQueries(filter, options),
     [],
   );
 }

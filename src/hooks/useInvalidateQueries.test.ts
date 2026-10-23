@@ -98,4 +98,48 @@ describe('invalidateQueries + useFetch', () => {
     });
     expect(queryFn).not.toHaveBeenCalled();
   });
+
+  it('invalidates several keys at once (array of keys)', async () => {
+    const todos = vi.fn(async () => 't');
+    const users = vi.fn(async () => 'u');
+    const posts = vi.fn(async () => 'p');
+    renderHook(() => useFetch({ queryKey: ['todos'], queryFn: todos }));
+    renderHook(() => useFetch({ queryKey: ['users'], queryFn: users }));
+    renderHook(() => useFetch({ queryKey: ['posts'], queryFn: posts }));
+    await waitFor(() => {
+      expect(todos).toHaveBeenCalledTimes(1);
+      expect(users).toHaveBeenCalledTimes(1);
+      expect(posts).toHaveBeenCalledTimes(1);
+    });
+
+    await act(async () => {
+      await invalidateQueries([['todos'], ['users']]);
+    });
+    expect(todos).toHaveBeenCalledTimes(2);
+    expect(users).toHaveBeenCalledTimes(2);
+    expect(posts).toHaveBeenCalledTimes(1); // untouched
+  });
+
+  it('a query matching multiple of the given keys refetches only once', async () => {
+    const queryFn = vi.fn(async () => 'v');
+    renderHook(() => useFetch({ queryKey: ['todos', 1], queryFn }));
+    await waitFor(() => expect(queryFn).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      // both ['todos'] (prefix) and ['todos', 1] (exact) match this query
+      await invalidateQueries([['todos'], ['todos', 1]]);
+    });
+    expect(queryFn).toHaveBeenCalledTimes(2);
+  });
+
+  it('a normal single key with scalar segments is still one key', async () => {
+    const queryFn = vi.fn(async () => 'v');
+    renderHook(() => useFetch({ queryKey: ['todos', 1], queryFn }));
+    await waitFor(() => expect(queryFn).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      await invalidateQueries(['todos', 1], { exact: true });
+    });
+    expect(queryFn).toHaveBeenCalledTimes(2);
+  });
 });
