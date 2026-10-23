@@ -14,7 +14,8 @@ and `error`, with zero runtime dependencies.
 
 **Stay on TanStack Query if you rely on any of:**
 
-- A shared **cache** across components, or **query invalidation** after mutations.
+- A shared **data cache** across components (`useFetch` has no stored cache, only
+  key-based **invalidation** — see [Query invalidation](#query-invalidation) below).
 - Request **deduplication**, `staleTime`/`gcTime`, background refetch, `refetchOnWindowFocus`.
 - Retries/`retryDelay`, infinite queries, suspense, devtools.
 
@@ -37,13 +38,13 @@ migrate the simple hooks and leave cache-dependent ones on TanStack Query.
 
 ### `useMutation` → `useMutation`
 
-| TanStack                                                                | hook-toolkit           | Notes                                                             |
-| ----------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------- |
-| `mutationFn`                                                            | `mutationFn` (1st arg) | same signature                                                    |
-| `mutate`, `mutateAsync`                                                 | same                   | `mutateAsync` **rejects** on error; `mutate` is fire-and-forget   |
-| `isPending`, `isError`, `isSuccess`, `isIdle`, `data`, `error`, `reset` | same names             | —                                                                 |
-| `onMutate`, `onSuccess`, `onError`, `onSettled`                         | same                   | `onMutate` here does not support optimistic rollback context      |
-| `onSuccess` invalidating queries                                        | —                      | no cache to invalidate; refetch manually via `useFetch().refetch` |
+| TanStack                                                                | hook-toolkit                                   | Notes                                                           |
+| ----------------------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------- |
+| `mutationFn`                                                            | `mutationFn` (1st arg)                         | same signature                                                  |
+| `mutate`, `mutateAsync`                                                 | same                                           | `mutateAsync` **rejects** on error; `mutate` is fire-and-forget |
+| `isPending`, `isError`, `isSuccess`, `isIdle`, `data`, `error`, `reset` | same names                                     | —                                                               |
+| `onMutate`, `onSuccess`, `onError`, `onSettled`                         | same                                           | `onMutate` here does not support optimistic rollback context    |
+| `queryClient.invalidateQueries({ queryKey })`                           | `useInvalidateQueries()` / `invalidateQueries` | refetches mounted `useFetch`es by key — see below               |
 
 ---
 
@@ -247,9 +248,54 @@ behave identically.
 
 ---
 
+## Query invalidation
+
+Like `queryClient.invalidateQueries`, you can refetch queries **by key** from
+anywhere — no need to thread a `refetch` down to the mutation. There's still no
+stored data cache; invalidation simply re-runs the `queryFn` of every **mounted**
+`useFetch` whose key matches.
+
+Matching mirrors TanStack: a **prefix** match by default, or pass `{ exact: true }`.
+
+```tsx
+import { useFetch, useMutation, useInvalidateQueries } from 'hook-toolkit';
+
+function Todos() {
+  const invalidate = useInvalidateQueries();
+
+  const { data } = useFetch({
+    queryKey: ['todos'],
+    queryFn: (signal) => fetch('/api/todos', { signal }).then((r) => r.json()),
+  });
+
+  // Refetch every ['todos', …] query after a successful create.
+  const { mutate: addTodo } = useMutation(createTodo, {
+    onSuccess: () => invalidate(['todos']),
+  });
+
+  // invalidate(['todos', 1], { exact: true }) → only the exact key.
+}
+```
+
+Need to invalidate outside a component (a plain event handler, a store action)?
+Import the standalone `invalidateQueries` — same signature, no hook required:
+
+```ts
+import { invalidateQueries } from 'hook-toolkit';
+invalidateQueries(['todos']); // returns a Promise that resolves when refetches settle
+```
+
+**Before (TanStack):** `const qc = useQueryClient(); … onSuccess: () => qc.invalidateQueries({ queryKey: ['todos'] })`
+**After (hook-toolkit):** `const invalidate = useInvalidateQueries(); … onSuccess: () => invalidate(['todos'])`
+
+> Note: `enabled: false` queries are not registered, so they aren't refetched by
+> an invalidation — they'll fetch when they become enabled, as in TanStack.
+
+---
+
 ## Gotcha checklist
 
 - [ ] Pass `signal` into `fetch`/XHR in `queryFn` if you want real cancellation.
-- [ ] After a mutation that changes list data, call the query's `refetch()` yourself (no automatic invalidation).
+- [ ] After a mutation that changes list data, `invalidate([...])` the affected keys (or call the query's `refetch()`).
 - [ ] If a hook's return type names TanStack-only fields, map or widen it (see note above).
 - [ ] Keep cache-dependent hooks on TanStack Query.

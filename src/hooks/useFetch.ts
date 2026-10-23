@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLatest } from './useLatest';
 import { useIsMounted } from './useIsMounted';
+import { subscribeQuery } from './queryRegistry';
+import type { QueryObserver } from './queryRegistry';
 
 export interface UseFetchOptions<T> {
   /** Values that identify this request; refetches when any of them change. */
@@ -113,6 +115,20 @@ export function useFetch<T>(options: UseFetchOptions<T>): UseFetchResult<T> {
   }, [serializedKey, enabled, execute]);
 
   const refetch = useCallback(() => execute(), [execute]);
+
+  // Register with the shared registry so `invalidateQueries` / the
+  // `useInvalidateQueries` hook can refetch this instance by key. The observer
+  // object is stable; its fields are kept current so the registry always sees
+  // the latest key and `execute`.
+  const observerRef = useRef<QueryObserver>({ queryKey: [], refetch: () => Promise.resolve() });
+  observerRef.current.queryKey = queryKey ?? [];
+  observerRef.current.refetch = refetch;
+
+  useEffect(() => {
+    if (!enabled) return;
+    return subscribeQuery(observerRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
 
   return {
     data,
