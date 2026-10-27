@@ -47,6 +47,9 @@ export type { UseClickOutsideOptions } from './hooks/useClickOutside';
 export { useHotkey } from './hooks/useHotkey';
 export type { UseHotkeyOptions } from './hooks/useHotkey';
 
+export { useIdle } from './hooks/useIdle';
+export type { UseIdleOptions } from './hooks/useIdle';
+
 export { useDocumentTitle } from './hooks/useDocumentTitle';
 export type { UseDocumentTitleOptions } from './hooks/useDocumentTitle';
 
@@ -58,6 +61,12 @@ export type { NetworkStatus } from './hooks/useNetworkStatus';
 
 export { useDisclosure } from './hooks/useDisclosure';
 export type { UseDisclosure, UseDisclosureOptions } from './hooks/useDisclosure';
+
+export { useStep } from './hooks/useStep';
+export type { UseStepOptions, UseStepControls } from './hooks/useStep';
+
+export { useTimer } from './hooks/useTimer';
+export type { UseTimerOptions, UseTimerResult } from './hooks/useTimer';
 
 export { useWebSocket } from './hooks/useWebSocket';
 export type {

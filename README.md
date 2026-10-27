@@ -11,7 +11,7 @@
 
 📖 **Documentation site:** [hook-toolkit-document-8azd.vercel.app](https://hook-toolkit-document-8azd.vercel.app/)
 
-> **Current version:** `0.2.4` — 28 hooks.
+> **Current version:** `0.3.0` — 32 hooks.
 
 `hook-toolkit` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
 
@@ -198,7 +198,7 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 13  | [`useToggle`](#primitives-1)        | boolean with `toggle`/`setOn`/`setOff`/`set`            |
 | 14  | [`useCounter`](#primitives-1)       | numeric counter with clamping and step                  |
 
-### 🌐 Browser / DOM (8)
+### 🌐 Browser / DOM (9)
 
 | #   | Hook                                  | Purpose                                                   |
 | --- | ------------------------------------- | --------------------------------------------------------- |
@@ -210,23 +210,26 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 20  | [`useNetworkStatus`](#browser--dom-1) | online/offline status                                     |
 | 21  | [`useWebSocket`](#browser--dom-1)     | WebSocket connection with state, send, reconnect, cleanup |
 | 22  | [`useHotkey`](#browser--dom-1)        | run a handler on a key or key-combo press                 |
+| 23  | [`useIdle`](#browser--dom-1)          | detect user inactivity after a timeout                    |
 
 ### 📡 Data fetching (6)
 
 | #   | Hook                                     | Purpose                                                             |
 | --- | ---------------------------------------- | ------------------------------------------------------------------- |
-| 23  | [`useFetch`](#data-fetching)             | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
-| 24  | [`useMutation`](#data-fetching)          | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
-| 25  | [`useInvalidateQueries`](#data-fetching) | refetch mounted `useFetch`es by key (one key or many)               |
-| 26  | [`useRetry`](#data-fetching)             | retry an async action with exponential backoff                      |
-| 27  | [`usePolling`](#data-fetching)           | poll an async function on an interval, no overlap                   |
-| 28  | [`useInfiniteScroll`](#data-fetching)    | load more when a sentinel scrolls into view                         |
+| 24  | [`useFetch`](#data-fetching)             | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
+| 25  | [`useMutation`](#data-fetching)          | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
+| 26  | [`useInvalidateQueries`](#data-fetching) | refetch mounted `useFetch`es by key (one key or many)               |
+| 27  | [`useRetry`](#data-fetching)             | retry an async action with exponential backoff                      |
+| 28  | [`usePolling`](#data-fetching)           | poll an async function on an interval, no overlap                   |
+| 29  | [`useInfiniteScroll`](#data-fetching)    | load more when a sentinel scrolls into view                         |
 
-### 🧩 UI state (1)
+### 🧩 UI state (3)
 
 | #   | Hook                         | Purpose                                                  |
 | --- | ---------------------------- | -------------------------------------------------------- |
-| 29  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+| 30  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+| 31  | [`useStep`](#ui-state)       | 1-based step state for wizards and multi-step forms      |
+| 32  | [`useTimer`](#ui-state)      | stopwatch / countdown timer with start/pause/restart     |
 
 Per-hook deep-dive pages for the flagships live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
@@ -455,6 +458,10 @@ const { online } = useNetworkStatus();
 useHotkey('ctrl+s', (e) => save());
 useHotkey(['meta+k', 'ctrl+k'], () => openCommandPalette());
 
+// useIdle(timeout, { events?, initialState?, onIdle?, onActive? }): boolean
+//   true once the user has been inactive for `timeout` ms; resets on activity
+const idle = useIdle(60_000, { onIdle: () => logout() });
+
 // useWebSocket<T>({ url, onMessageReceived?, disableInitialConnection? })
 //   -> { isConnected, error, sendData, reconnect, closeConnection }
 const { isConnected, sendData } = useWebSocket<ChatMessage>({
@@ -523,6 +530,20 @@ const dialog = useDisclosure<User>();
 <Modal open={dialog.opened} onClose={dialog.close}>
   {dialog.data && <EditForm user={dialog.data} />}
 </Modal>;
+
+// useStep(totalSteps, { initial?, loop? })
+//   -> [step, { setStep, next, back, reset, canNext, canBack, isFirst, isLast }]
+const [step, { next, back, canBack, isLast }] = useStep(3);
+<button onClick={back} disabled={!canBack}>Back</button>;
+<button onClick={next}>{isLast ? 'Finish' : 'Next'}</button>;
+
+// useTimer({ initialTime?, interval?, autoStart?, countdown?, onEnd? })
+//   -> { time, isRunning, start, pause, resume, restart }
+const { time, restart } = useTimer({
+  initialTime: 30_000,
+  countdown: true,
+  onEnd: () => setCanResend(true),
+});
 ```
 
 Full reference → [docs/reference.md](./docs/reference.md).

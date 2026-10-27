@@ -6,8 +6,13 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-27
+
 ### Added
 
+- `useStep(totalSteps, options?)` — 1-based step state for wizards, onboarding, and multi-step forms. Returns `[step, controls]` with `setStep`/`next`/`back`/`reset` (all clamped) plus `canNext`/`canBack`/`isFirst`/`isLast`; `loop` wraps around the ends.
+- `useIdle(timeout, options?)` — report `true` once the user has been inactive for `timeout` ms. Watches pointer/keyboard/scroll/touch activity (configurable), resets on any activity, fires `onIdle`/`onActive`, SSR-safe.
+- `useTimer(options?)` — stopwatch (counts up) or countdown timer with `start`/`pause`/`resume`/`restart`, `time`/`isRunning`, configurable `interval`, `autoStart`, and an `onEnd` callback fired once when a countdown hits 0.
 - `useHotkey(keys, handler, options?)` — fire a handler on a key or key-combo press. Combos are plain `+`-joined strings (`'ctrl+s'`, `'meta+k'`, `'escape'`, `'ctrl+shift+p'`) with flexible modifier aliases (`ctrl`/`control`, `meta`/`cmd`/`command`/`win`, `alt`/`option`, `shift`); pass an array to bind several combos to one handler. Matches by `key` or `code`, `preventDefault` on by default, `enabled`/`event`/`target` options, SSR-safe, no stale closures.
 - `useInvalidateQueries()` — returns a stable `invalidate(key | keys, { exact? })` that refetches every mounted `useFetch` whose `queryKey` matches, the TanStack-Query `queryClient.invalidateQueries` pattern without a provider or a stored cache. Prefix match by default; `{ exact: true }` for an identical match; pass an array of keys (`[['todos'], ['users']]`) to invalidate several at once (each query refetches at most once).
 - `invalidateQueries(key | keys, options?)` — the same thing as a standalone function for use outside React (e.g. store actions, event handlers).
