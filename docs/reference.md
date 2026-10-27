@@ -1,4 +1,4 @@
-# Reference: primitives & browser hooks
+# Reference: primitives, browser, data-fetching & UI-state hooks
 
 Concise reference for the supporting hooks. All are importable from `hook-toolkit` and documented in source via JSDoc.
 
@@ -161,6 +161,23 @@ const { isConnected, sendData, reconnect } = useWebSocket<ChatMessage>({
 });
 ```
 
+### `useHotkey(keys, handler, { enabled?, event?, target?, preventDefault? })`
+
+Fire `handler` when a key or key-combo is pressed — the hook only _detects_ the press; what happens next is yours. Combos are `+`-joined strings (`'ctrl+s'`, `'meta+k'`, `'escape'`, `'ctrl+shift+p'`) with flexible modifier aliases (`ctrl`/`control`, `meta`/`cmd`/`command`/`win`, `alt`/`option`, `shift`); pass an array to bind several combos to one handler. Matches by `key` or `code`. `preventDefault` is `true` by default. No stale closures, binds once, SSR-safe.
+
+```tsx
+useHotkey('ctrl+s', (e) => save());
+useHotkey(['meta+k', 'ctrl+k'], () => openCommandPalette());
+```
+
+### `useIdle(timeout, { events?, initialState?, onIdle?, onActive? }): boolean`
+
+Returns `true` once the user has been inactive for `timeout` ms. Any watched activity event (pointer/keyboard/scroll/touch by default) resets the timer and flips back to active, firing `onIdle`/`onActive` on each transition. Useful for auto-logout, pausing polling, or "are you still there?" prompts. SSR-safe (starts at `initialState`).
+
+```tsx
+const idle = useIdle(60_000, { onIdle: () => logout() });
+```
+
 ---
 
 ## Data fetching
@@ -189,6 +206,17 @@ const { mutateAsync: createAllergy, isPending } = useMutation(
   { onSuccess: () => toast('Saved') },
 );
 await createAllergy({ patientAllergy, xTENANTID });
+```
+
+### `useInvalidateQueries(): (key | keys, { exact? }) => void`
+
+Returns a stable `invalidate` that refetches every mounted `useFetch` whose `queryKey` matches — the TanStack-Query `queryClient.invalidateQueries` pattern without a provider or stored cache. Prefix match by default; `{ exact: true }` for an identical match. Pass an array of keys to invalidate several at once (each query refetches at most once). Also exported as a standalone `invalidateQueries(...)` for use outside React (store actions, event handlers).
+
+```tsx
+const invalidate = useInvalidateQueries();
+invalidate(['user', id]); // prefix: ['user', id], ['user', id, …]
+invalidate([['user'], ['todos']]); // several keys at once
+invalidate(['user', id], { exact: true }); // only the identical key
 ```
 
 ### `useRetry<T>(fn, { retries?, delay?, backoff?, onRetry?, shouldRetry? })`
@@ -237,4 +265,27 @@ Open/close state for modals, drawers, dialogs, and popovers, with an optional **
 const dialog = useDisclosure<User>();
 dialog.open(user); // dialog.opened === true, dialog.data === user
 dialog.close(); // dialog.opened === false, dialog.data === undefined
+```
+
+### `useStep(totalSteps, { initial?, loop? }): [step, { setStep, next, back, reset, canNext, canBack, isFirst, isLast }]`
+
+1-based step state for wizards, onboarding, and multi-step forms. `next`/`back`/`setStep` are clamped into `[1, totalSteps]`; `reset` returns to the initial step. `canNext`/`canBack`/`isFirst`/`isLast` reflect the bounds. With `loop: true`, `next` past the last step wraps to the first (and `back` wraps the other way), and `canNext`/`canBack` stay `true`. Controls are stable per state.
+
+```tsx
+const [step, { next, back, canBack, isLast }] = useStep(3);
+// <button onClick={back} disabled={!canBack}>Back</button>
+// <button onClick={next}>{isLast ? 'Finish' : 'Next'}</button>
+```
+
+### `useTimer({ initialTime?, interval?, autoStart?, countdown?, onEnd? }): { time, isRunning, start, pause, resume, restart }`
+
+A stopwatch (counts up) or countdown (`countdown: true`, counts down from `initialTime`) timer. `start` resets to `initialTime` then runs; `pause`/`resume` keep the current time; `restart(newTime?)` stops and resets. A countdown stops at `0` and fires `onEnd` once. `interval` is the tick size (default 1000 ms). Controls are stable.
+
+```tsx
+// 30s resend cooldown
+const { time, isRunning, restart } = useTimer({
+  initialTime: 30_000,
+  countdown: true,
+  onEnd: () => setCanResend(true),
+});
 ```

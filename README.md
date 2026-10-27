@@ -534,7 +534,9 @@ const dialog = useDisclosure<User>();
 // useStep(totalSteps, { initial?, loop? })
 //   -> [step, { setStep, next, back, reset, canNext, canBack, isFirst, isLast }]
 const [step, { next, back, canBack, isLast }] = useStep(3);
-<button onClick={back} disabled={!canBack}>Back</button>;
+<button onClick={back} disabled={!canBack}>
+  Back
+</button>;
 <button onClick={next}>{isLast ? 'Finish' : 'Next'}</button>;
 
 // useTimer({ initialTime?, interval?, autoStart?, countdown?, onEnd? })

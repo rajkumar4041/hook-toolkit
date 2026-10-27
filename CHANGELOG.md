@@ -6,6 +6,12 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-27
+
+### Changed
+
+- Documentation updates and consistent Prettier formatting across the repo.
+
 ## [0.3.0] - 2026-10-27
 
 ### Added

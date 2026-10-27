@@ -45,13 +45,19 @@ const clamp = (value: number, min: number, max: number): number =>
  * @param options    `initial` (1-based start) and `loop`.
  * @returns A tuple of `[step, controls]`. The controls object is stable per state.
  */
-export function useStep(totalSteps: number, options: UseStepOptions = {}): [number, UseStepControls] {
+export function useStep(
+  totalSteps: number,
+  options: UseStepOptions = {},
+): [number, UseStepControls] {
   const { initial = 1, loop = false } = options;
   const max = Math.max(1, Math.floor(totalSteps));
 
   const [step, setStepState] = useState(() => clamp(Math.floor(initial), 1, max));
 
-  const setStep = useCallback((next: number) => setStepState(clamp(Math.floor(next), 1, max)), [max]);
+  const setStep = useCallback(
+    (next: number) => setStepState(clamp(Math.floor(next), 1, max)),
+    [max],
+  );
 
   const next = useCallback(
     () => setStepState((s) => (s >= max ? (loop ? 1 : s) : s + 1)),
