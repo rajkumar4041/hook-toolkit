@@ -6,6 +6,12 @@ to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-27
+
+### Added
+
+- `useEventSource(options)` — subscribe to a Server-Sent Events stream via the native `EventSource`. Receive-only (SSE is one-way; use `useWebSocket` for bidirectional). Exposes `data` (the latest default-event payload), `isConnected`, and `error`, plus `reconnect`/`close` for manual control. `onMessage` handles default `message` events and `events` maps named SSE events (`event: <name>`) to handlers — all latest-callback (no stale closures). Supports `withCredentials` and `disableInitialConnection`, reopens when `url`/`withCredentials`/the set of event names changes, and is SSR-safe.
+
 ## [0.3.1] - 2026-10-27
 
 ### Changed

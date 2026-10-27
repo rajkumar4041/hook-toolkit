@@ -161,6 +161,18 @@ const { isConnected, sendData, reconnect } = useWebSocket<ChatMessage>({
 });
 ```
 
+### `useEventSource<T>({ url, onMessage?, events?, withCredentials?, disableInitialConnection? }): { data, isConnected, error, reconnect, close }`
+
+Subscribe to a Server-Sent Events stream via the native `EventSource`. Receive-only (SSE is one-way — use `useWebSocket` for bidirectional). `data` holds the raw `data` string of the latest default (`message`) event; `onMessage` is always the latest callback (no stale closures). Pass `events` to listen to named SSE events (`event: <name>` lines). The browser auto-reconnects dropped streams; `reconnect`/`close` are for manual control. Reopens when `url`, `withCredentials`, or the set of event names changes; closes on unmount. SSR-safe (the stream is created in an effect).
+
+```tsx
+const { data, isConnected } = useEventSource<string>({
+  url: '/api/prices',
+  onMessage: (e) => console.log('tick', e.data),
+  events: { price: (e) => updatePrice(e.data) },
+});
+```
+
 ### `useHotkey(keys, handler, { enabled?, event?, target?, preventDefault? })`
 
 Fire `handler` when a key or key-combo is pressed — the hook only _detects_ the press; what happens next is yours. Combos are `+`-joined strings (`'ctrl+s'`, `'meta+k'`, `'escape'`, `'ctrl+shift+p'`) with flexible modifier aliases (`ctrl`/`control`, `meta`/`cmd`/`command`/`win`, `alt`/`option`, `shift`); pass an array to bind several combos to one handler. Matches by `key` or `code`. `preventDefault` is `true` by default. No stale closures, binds once, SSR-safe.

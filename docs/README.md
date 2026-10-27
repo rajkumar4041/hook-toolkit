@@ -21,7 +21,7 @@ Full reference for every hook. Each flagship page follows the same template:
 
 ## Primitives & browser hooks
 
-- [Reference](./reference.md) — primitives (`useLatest`, `useIsMounted`, `usePrevious`, `useDebounce`, `useEventListener`, `useInterval`, `useTimeout`, `useToggle`, `useCounter`), browser/DOM (`useMediaQuery`, `useWindowSize`, `useClickOutside`, `useDocumentTitle`, `useClipboard`, `useNetworkStatus`, `useWebSocket`, `useHotkey`, `useIdle`), data fetching (`useFetch`, `useMutation`, `useInvalidateQueries`, `useRetry`, `usePolling`, `useInfiniteScroll`), and UI state (`useDisclosure`, `useStep`, `useTimer`)
+- [Reference](./reference.md) — primitives (`useLatest`, `useIsMounted`, `usePrevious`, `useDebounce`, `useEventListener`, `useInterval`, `useTimeout`, `useToggle`, `useCounter`), browser/DOM (`useMediaQuery`, `useWindowSize`, `useClickOutside`, `useDocumentTitle`, `useClipboard`, `useNetworkStatus`, `useWebSocket`, `useEventSource`, `useHotkey`, `useIdle`), data fetching (`useFetch`, `useMutation`, `useInvalidateQueries`, `useRetry`, `usePolling`, `useInfiniteScroll`), and UI state (`useDisclosure`, `useStep`, `useTimer`)
 
 ## Guides
 

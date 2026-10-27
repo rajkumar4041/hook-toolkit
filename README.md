@@ -11,7 +11,7 @@
 
 📖 **Documentation site:** [hook-toolkit-document-8azd.vercel.app](https://hook-toolkit-document-8azd.vercel.app/)
 
-> **Current version:** `0.3.0` — 32 hooks.
+> **Current version:** `0.4.0` — 33 hooks.
 
 `hook-toolkit` is a lightweight, TypeScript-first collection of React hooks. Its five flagship hooks are the differentiator: they compose the **hard, bug-prone parts** that other libraries leave to you — request cancellation, stale-result races, cross-tab sync, save-status machines, and unsaved-change guards — behind a one-line API.
 
@@ -198,7 +198,7 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 13  | [`useToggle`](#primitives-1)        | boolean with `toggle`/`setOn`/`setOff`/`set`            |
 | 14  | [`useCounter`](#primitives-1)       | numeric counter with clamping and step                  |
 
-### 🌐 Browser / DOM (9)
+### 🌐 Browser / DOM (10)
 
 | #   | Hook                                  | Purpose                                                   |
 | --- | ------------------------------------- | --------------------------------------------------------- |
@@ -209,27 +209,28 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 19  | [`useClipboard`](#browser--dom-1)     | copy text with success/error feedback                     |
 | 20  | [`useNetworkStatus`](#browser--dom-1) | online/offline status                                     |
 | 21  | [`useWebSocket`](#browser--dom-1)     | WebSocket connection with state, send, reconnect, cleanup |
-| 22  | [`useHotkey`](#browser--dom-1)        | run a handler on a key or key-combo press                 |
-| 23  | [`useIdle`](#browser--dom-1)          | detect user inactivity after a timeout                    |
+| 22  | [`useEventSource`](#browser--dom-1)   | subscribe to a Server-Sent Events (SSE) stream            |
+| 23  | [`useHotkey`](#browser--dom-1)        | run a handler on a key or key-combo press                 |
+| 24  | [`useIdle`](#browser--dom-1)          | detect user inactivity after a timeout                    |
 
 ### 📡 Data fetching (6)
 
 | #   | Hook                                     | Purpose                                                             |
 | --- | ---------------------------------------- | ------------------------------------------------------------------- |
-| 24  | [`useFetch`](#data-fetching)             | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
-| 25  | [`useMutation`](#data-fetching)          | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
-| 26  | [`useInvalidateQueries`](#data-fetching) | refetch mounted `useFetch`es by key (one key or many)               |
-| 27  | [`useRetry`](#data-fetching)             | retry an async action with exponential backoff                      |
-| 28  | [`usePolling`](#data-fetching)           | poll an async function on an interval, no overlap                   |
-| 29  | [`useInfiniteScroll`](#data-fetching)    | load more when a sentinel scrolls into view                         |
+| 25  | [`useFetch`](#data-fetching)             | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
+| 26  | [`useMutation`](#data-fetching)          | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
+| 27  | [`useInvalidateQueries`](#data-fetching) | refetch mounted `useFetch`es by key (one key or many)               |
+| 28  | [`useRetry`](#data-fetching)             | retry an async action with exponential backoff                      |
+| 29  | [`usePolling`](#data-fetching)           | poll an async function on an interval, no overlap                   |
+| 30  | [`useInfiniteScroll`](#data-fetching)    | load more when a sentinel scrolls into view                         |
 
 ### 🧩 UI state (3)
 
 | #   | Hook                         | Purpose                                                  |
 | --- | ---------------------------- | -------------------------------------------------------- |
-| 30  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
-| 31  | [`useStep`](#ui-state)       | 1-based step state for wizards and multi-step forms      |
-| 32  | [`useTimer`](#ui-state)      | stopwatch / countdown timer with start/pause/restart     |
+| 31  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+| 32  | [`useStep`](#ui-state)       | 1-based step state for wizards and multi-step forms      |
+| 33  | [`useTimer`](#ui-state)      | stopwatch / countdown timer with start/pause/restart     |
 
 Per-hook deep-dive pages for the flagships live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
@@ -469,6 +470,14 @@ const { isConnected, sendData } = useWebSocket<ChatMessage>({
   onMessageReceived: (e) => appendMessage(e.data),
 });
 sendData(JSON.stringify(msg)); // returns false (dropped) until isConnected
+
+// useEventSource<T>({ url, onMessage?, events?, withCredentials?, disableInitialConnection? })
+//   -> { data, isConnected, error, reconnect, close }  (receive-only SSE)
+const { data, isConnected } = useEventSource<string>({
+  url: '/api/prices',
+  onMessage: (e) => console.log('tick', e.data),
+  events: { price: (e) => updatePrice(e.data) },
+});
 ```
 
 ### Data fetching

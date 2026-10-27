@@ -75,6 +75,9 @@ export type {
   WebSocketSendable,
 } from './hooks/useWebSocket';
 
+export { useEventSource } from './hooks/useEventSource';
+export type { UseEventSourceProps, UseEventSourceReturn } from './hooks/useEventSource';
+
 export { useRetry } from './hooks/useRetry';
 export type { RetryStatus, UseRetryOptions, UseRetry } from './hooks/useRetry';
 
