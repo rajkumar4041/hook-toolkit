@@ -8,6 +8,7 @@ to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `useHotkey(keys, handler, options?)` — fire a handler on a key or key-combo press. Combos are plain `+`-joined strings (`'ctrl+s'`, `'meta+k'`, `'escape'`, `'ctrl+shift+p'`) with flexible modifier aliases (`ctrl`/`control`, `meta`/`cmd`/`command`/`win`, `alt`/`option`, `shift`); pass an array to bind several combos to one handler. Matches by `key` or `code`, `preventDefault` on by default, `enabled`/`event`/`target` options, SSR-safe, no stale closures.
 - `useInvalidateQueries()` — returns a stable `invalidate(key | keys, { exact? })` that refetches every mounted `useFetch` whose `queryKey` matches, the TanStack-Query `queryClient.invalidateQueries` pattern without a provider or a stored cache. Prefix match by default; `{ exact: true }` for an identical match; pass an array of keys (`[['todos'], ['users']]`) to invalidate several at once (each query refetches at most once).
 - `invalidateQueries(key | keys, options?)` — the same thing as a standalone function for use outside React (e.g. store actions, event handlers).
 

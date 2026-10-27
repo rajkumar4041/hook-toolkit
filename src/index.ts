@@ -44,6 +44,9 @@ export type { WindowSize } from './hooks/useWindowSize';
 export { useClickOutside } from './hooks/useClickOutside';
 export type { UseClickOutsideOptions } from './hooks/useClickOutside';
 
+export { useHotkey } from './hooks/useHotkey';
+export type { UseHotkeyOptions } from './hooks/useHotkey';
+
 export { useDocumentTitle } from './hooks/useDocumentTitle';
 export type { UseDocumentTitleOptions } from './hooks/useDocumentTitle';
 

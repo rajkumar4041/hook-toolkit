@@ -198,7 +198,7 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 13  | [`useToggle`](#primitives-1)        | boolean with `toggle`/`setOn`/`setOff`/`set`            |
 | 14  | [`useCounter`](#primitives-1)       | numeric counter with clamping and step                  |
 
-### 🌐 Browser / DOM (7)
+### 🌐 Browser / DOM (8)
 
 | #   | Hook                                  | Purpose                                                   |
 | --- | ------------------------------------- | --------------------------------------------------------- |
@@ -209,23 +209,24 @@ const { status, isDirty, saveNow } = useAutosave(draft, (data, signal) =>
 | 19  | [`useClipboard`](#browser--dom-1)     | copy text with success/error feedback                     |
 | 20  | [`useNetworkStatus`](#browser--dom-1) | online/offline status                                     |
 | 21  | [`useWebSocket`](#browser--dom-1)     | WebSocket connection with state, send, reconnect, cleanup |
+| 22  | [`useHotkey`](#browser--dom-1)        | run a handler on a key or key-combo press                 |
 
 ### 📡 Data fetching (6)
 
 | #   | Hook                                     | Purpose                                                             |
 | --- | ---------------------------------------- | ------------------------------------------------------------------- |
-| 22  | [`useFetch`](#data-fetching)             | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
-| 23  | [`useMutation`](#data-fetching)          | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
-| 24  | [`useInvalidateQueries`](#data-fetching) | refetch mounted `useFetch`es by key (one key or many)               |
-| 25  | [`useRetry`](#data-fetching)             | retry an async action with exponential backoff                      |
-| 26  | [`usePolling`](#data-fetching)           | poll an async function on an interval, no overlap                   |
-| 27  | [`useInfiniteScroll`](#data-fetching)    | load more when a sentinel scrolls into view                         |
+| 23  | [`useFetch`](#data-fetching)             | TanStack-Query-lite query: `queryKey`/`queryFn`, data/loading/error |
+| 24  | [`useMutation`](#data-fetching)          | TanStack-Query-lite mutation: `mutate`/`mutateAsync`, `isPending`   |
+| 25  | [`useInvalidateQueries`](#data-fetching) | refetch mounted `useFetch`es by key (one key or many)               |
+| 26  | [`useRetry`](#data-fetching)             | retry an async action with exponential backoff                      |
+| 27  | [`usePolling`](#data-fetching)           | poll an async function on an interval, no overlap                   |
+| 28  | [`useInfiniteScroll`](#data-fetching)    | load more when a sentinel scrolls into view                         |
 
 ### 🧩 UI state (1)
 
 | #   | Hook                         | Purpose                                                  |
 | --- | ---------------------------- | -------------------------------------------------------- |
-| 28  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
+| 29  | [`useDisclosure`](#ui-state) | modal/drawer/dialog open-state with a typed data payload |
 
 Per-hook deep-dive pages for the flagships live in [`docs/`](./docs/README.md). The complete reference is also inline below.
 
@@ -447,6 +448,12 @@ const { copy, copied } = useClipboard();
 
 // useNetworkStatus(): { online }
 const { online } = useNetworkStatus();
+
+// useHotkey(keys, handler, { enabled?, event?, target?, preventDefault? })
+//   keys: 'ctrl+s' | 'meta+k' | 'escape' | ['meta+k', 'ctrl+k']
+//   only detects the press — preventDefault is true by default
+useHotkey('ctrl+s', (e) => save());
+useHotkey(['meta+k', 'ctrl+k'], () => openCommandPalette());
 
 // useWebSocket<T>({ url, onMessageReceived?, disableInitialConnection? })
 //   -> { isConnected, error, sendData, reconnect, closeConnection }
